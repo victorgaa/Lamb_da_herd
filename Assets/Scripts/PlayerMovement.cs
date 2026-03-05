@@ -1,3 +1,4 @@
+using PixPlays.ElementalVFX;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -9,6 +10,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Animator anim;
     [SerializeField] private GameObject model;
     [SerializeField] private Camera cam;
+
+    [SerializeField] Animator _Anim;
+    [SerializeField] BindingPoints _BindingPoints;
+    [SerializeField] Transform _Target;
+
+    private AnimatorOverrideController _overrideController;
+    public BindingPoints BindingPoints => _BindingPoints;
 
     private float rotateToFaceMovementSpeed = 5f;
     private float rotateToFaceAwayFromCameraSpeed = 5f;
@@ -33,6 +41,12 @@ public class PlayerMovement : MonoBehaviour
         float timeToApex = jumpTime / 2.0f;
         gravity = (-2 * jumpHeight) / Mathf.Pow(timeToApex, 2);
         initialJumpVelocity = Mathf.Sqrt(jumpHeight * -2 * gravity);
+
+        if (_Anim.runtimeAnimatorController != null)
+        {
+            _overrideController = new AnimatorOverrideController(_Anim.runtimeAnimatorController);
+            _Anim.runtimeAnimatorController = _overrideController;
+        }
     }
 
     void Update()
@@ -106,6 +120,26 @@ public class PlayerMovement : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, camRotation, rotateToFaceAwayFromCameraSpeed * Time.deltaTime);
     }
 
+    public void PlayAnimation(string clipId, AnimationClip clip)
+    {
+        if (_overrideController != null)
+        {
+            _overrideController[clipId] = clip;
+            _Anim.SetTrigger("Play");
+        }
+    }
+
+    public Vector3 GetTarget()
+    {
+        Vector3 direction = (_Target.position - transform.position).normalized;
+        Ray ray = new Ray(transform.position, direction);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 100))
+        {
+            return hit.point;
+        }
+        return _Target.position;
+    }
 
     private void OnDrawGizmos()
     {
