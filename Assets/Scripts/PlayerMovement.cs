@@ -28,20 +28,9 @@ public class PlayerMovement : MonoBehaviour
     private float yVelocity = 0f;       // current y Velocity
     private float yVelocityWhenGrounded = -4f;  // this ensures cc.isGrounded will work 
 
-    private float jumpHeight = 3.0f;    // the height of our jump in units
-    private float jumpTime = 0.5f;      // the time of our jump in seconds
-    private float initialJumpVelocity;  // upward velocity for jumping (precalculated)
-
-    private float jumpsAvailable = 0;
-    private float jumpsMax = 2;
 
     private void Start()
     {
-        // calculate gravity & initial jump velocity required for our jump
-        float timeToApex = jumpTime / 2.0f;
-        gravity = (-2 * jumpHeight) / Mathf.Pow(timeToApex, 2);
-        initialJumpVelocity = Mathf.Sqrt(jumpHeight * -2 * gravity);
-
         if (_Anim.runtimeAnimatorController != null)
         {
             _overrideController = new AnimatorOverrideController(_Anim.runtimeAnimatorController);
@@ -71,38 +60,8 @@ public class PlayerMovement : MonoBehaviour
         }
 
         movement *= speed;
-
-        // calculate yVelocity and add it to the player's movement vector
-        yVelocity += gravity * Time.deltaTime;
-
-        // if we are on the ground and we were falling
-        if (cc.isGrounded && yVelocity < 0.0)
-        {
-            yVelocity = yVelocityWhenGrounded;
-            jumpsAvailable = jumpsMax;
-        }
-
-        // give upward y Velocity if we jumped
-        if (Input.GetButtonDown("Jump") && jumpsAvailable > 0)
-        {
-            yVelocity = initialJumpVelocity;
-            jumpsAvailable--;
-            anim.SetTrigger("jump");
-        }
-
-        anim.SetBool("isGrounded", cc.isGrounded);
-        movement.y = yVelocity;
-
         movement *= Time.deltaTime; // make all movement processor independent
-
-        // move the player  (using the character controller)
         cc.Move(movement);
-
-        // rotate the player
-        //Vector3 rotation = Vector3.up * rotationSpeed * Time.deltaTime * Input.GetAxis("Mouse X");
-       //transform.Rotate(rotation);
-
-
     }
 
 
