@@ -8,7 +8,12 @@ public class SheepMovement : MonoBehaviour
     private bool isRunning = false;
     private float runTimer = 0f;
     private float runDuration = 3f;
-
+    [SerializeField] private AudioClip[] goatScreams;
+    AudioSource audioSrc;
+    void Start()
+    {
+        audioSrc = GetComponent<AudioSource>();
+    }
     void Update()
     {
         if (isRunning)
@@ -31,6 +36,11 @@ public class SheepMovement : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            if (goatScreams.Length > 0)
+            {
+                AudioClip scream = goatScreams[Random.Range(0, goatScreams.Length)];
+                audioSrc.PlayOneShot(scream);
+            }
             Vector3 direction = transform.position - other.transform.position;
 
             direction.y = 0f; // ignore vertical difference

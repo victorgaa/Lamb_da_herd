@@ -1,4 +1,3 @@
-using PixPlays.ElementalVFX;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -11,32 +10,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private GameObject model;
     [SerializeField] private Camera cam;
 
-    [SerializeField] Animator _Anim;
-    [SerializeField] BindingPoints _BindingPoints;
-    [SerializeField] Transform _Target;
-
-    private AnimatorOverrideController _overrideController;
-    public BindingPoints BindingPoints => _BindingPoints;
-
     private float rotateToFaceMovementSpeed = 5f;
     private float rotateToFaceAwayFromCameraSpeed = 5f;
-
     private float speed = 9.0f;         // XZ movement speed
-    private float rotationSpeed = 720f; // rotation sensitivity
-
-    private float gravity = -9.81f;     // default gravity (this will change)
-    private float yVelocity = 0f;       // current y Velocity
-    private float yVelocityWhenGrounded = -4f;  // this ensures cc.isGrounded will work 
-
-
-    private void Start()
-    {
-        if (_Anim.runtimeAnimatorController != null)
-        {
-            _overrideController = new AnimatorOverrideController(_Anim.runtimeAnimatorController);
-            _Anim.runtimeAnimatorController = _overrideController;
-        }
-    }
 
     void Update()
     {
@@ -77,27 +53,6 @@ public class PlayerMovement : MonoBehaviour
     {
         Quaternion camRotation = Quaternion.Euler(0, cam.transform.rotation.eulerAngles.y, 0);
         transform.rotation = Quaternion.Slerp(transform.rotation, camRotation, rotateToFaceAwayFromCameraSpeed * Time.deltaTime);
-    }
-
-    public void PlayAnimation(string clipId, AnimationClip clip)
-    {
-        if (_overrideController != null)
-        {
-            _overrideController[clipId] = clip;
-            _Anim.SetTrigger("Play");
-        }
-    }
-
-    public Vector3 GetTarget()
-    {
-        Vector3 direction = (_Target.position - transform.position).normalized;
-        Ray ray = new Ray(transform.position, direction);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 100))
-        {
-            return hit.point;
-        }
-        return _Target.position;
     }
 
     private void OnDrawGizmos()
