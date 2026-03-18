@@ -11,8 +11,8 @@ public class GameManager : MonoBehaviour
 
     private int scoreP1 = 0;
     private int scoreP2 = 0;
-    private float MAXSPAWNRANGEX = 40f;
-    private float MAXSPAWNRANGEZ = 40f;
+    private float MAXSPAWNRANGEX = 34.5f;
+    private float MAXSPAWNRANGEZ = 34.5f;
     void Start()
     {
         SpawnPoints();
