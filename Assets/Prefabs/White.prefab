@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 969842492639872199}
+  - component: {fileID: -5981201887517266280}
   - component: {fileID: 1929233981521154483}
-  - component: {fileID: 9160461981796217851}
   - component: {fileID: 6995656621791055516}
   - component: {fileID: 8641200059401434937}
   m_Layer: 0
@@ -37,6 +37,29 @@ Transform:
   - {fileID: 5826540991672992125}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-5981201887517266280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3510213296537911726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a2e504f025ea774693b09f7e4b55868, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  runSpeed: 10
+  goatScreams:
+  - {fileID: 8300000, guid: 7b59b3fb2e95fd94c8aef46bc8cfb003, type: 3}
+  - {fileID: 8300000, guid: 8c02bca7dc7538e4aaa0c7fde2c0cb88, type: 3}
+  - {fileID: 8300000, guid: c766479672c810d4ca20eac424b177fe, type: 3}
+  - {fileID: 8300000, guid: 856a6eb5652c9284ca4a0b3a9213dae3, type: 3}
+  NorthGoal: {fileID: 0}
+  SouthGoal: {fileID: 0}
+  raycastOnlyLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!65 &1929233981521154483
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -58,24 +81,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2, y: 2, z: 2}
   m_Center: {x: 0, y: 1, z: -0.65}
---- !u!114 &9160461981796217851
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3510213296537911726}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a2e504f025ea774693b09f7e4b55868, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  runSpeed: 5
-  goatScreams:
-  - {fileID: 8300000, guid: 7b59b3fb2e95fd94c8aef46bc8cfb003, type: 3}
-  - {fileID: 8300000, guid: 8c02bca7dc7538e4aaa0c7fde2c0cb88, type: 3}
-  - {fileID: 8300000, guid: c766479672c810d4ca20eac424b177fe, type: 3}
-  - {fileID: 8300000, guid: 856a6eb5652c9284ca4a0b3a9213dae3, type: 3}
 --- !u!65 &6995656621791055516
 BoxCollider:
   m_ObjectHideFlags: 0

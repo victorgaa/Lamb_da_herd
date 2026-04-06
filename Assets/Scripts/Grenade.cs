@@ -10,7 +10,6 @@ public class Grenade : MonoBehaviour
 
     [Header("Explosion Settings")]
     [SerializeField] private float explosionDelay = 3f; 
-    [SerializeField] private float explosionForce = 500f;
     [SerializeField] private float explosionRadius = 10f;
 
     [Header("Audio Effects")]
