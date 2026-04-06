@@ -15,12 +15,20 @@ public class GrenadeThrower : MonoBehaviour
     [SerializeField] private float ThrowForce = 10f;
     [SerializeField] private float maxForce = 20f;
 
+    [Header("Character")]
+    [SerializeField] private Camera charCamera;
+    [SerializeField] private Transform Character;
+    [SerializeField] private Transform model;
+
+    [Header("Trajectory Settings")]
+    [SerializeField] private LineRenderer trajectoryLine;
+
+    [Header("Audio")]
+    [SerializeField] private AudioClip pullPinSound;
+    [SerializeField] private AudioClip throwSound;
+
     private bool isCharging = false;
     private float chargeTime = 0f;
-
-    [Header("Character Camera")]
-    [SerializeField]  private Camera charCamera;
-
     private void Update()
     {
         if (Input.GetKeyDown(throwKey)) // Left mouse button
@@ -38,43 +46,61 @@ public class GrenadeThrower : MonoBehaviour
     }
 
     void StartThrowing()
-    { 
-        //Pull pin sound
+    {
+        GrenadeAudioManager.instance.PlayOneShot(pullPinSound, 0.5f);
+
         isCharging = true;
         chargeTime = 0f;
-        //Trajectory line
+
+        trajectoryLine.enabled = true;
     }
 
     void ChargeThrow() 
     { 
         chargeTime += Time.deltaTime;
-        //Update trajectory line
+        
+        Vector3 grenadeVelocity = (charCamera.transform.forward + throwDirection).normalized * Mathf.Min(chargeTime * ThrowForce, maxForce);
+        ShowTrajectory(throwPosition.position + throwPosition.forward, grenadeVelocity);
     }
 
     void ReleaseThrow() 
     {
         ThrowGrenade(Mathf.Min(chargeTime * ThrowForce, maxForce));
         isCharging = false;
-        //hide the line
+        trajectoryLine.enabled = false;
     }
-    void ThrowGrenade(float force) 
+    void ThrowGrenade(float force)
     {
-        Vector3 spawnPosition = throwPosition.position + charCamera.transform.forward;
+        Vector3 spawnPosition = throwPosition.position;
 
-        GameObject grenade = Instantiate(grenadePrefab, spawnPosition, charCamera.transform.rotation);
+        GameObject grenade = Instantiate(grenadePrefab, spawnPosition, model.rotation);
+
         Rigidbody rb = grenade.GetComponent<Rigidbody>();
 
-        if (rb == null)
+        Collider grenadeCol = grenade.GetComponent<Collider>();
+        Collider[] playerCols = Character.GetComponentsInChildren<Collider>();
+
+        foreach (Collider col in playerCols)
         {
-            Debug.LogError("Grenade prefab is missing a Rigidbody!");
-            return;
+            Physics.IgnoreCollision(grenadeCol, col);
         }
 
-        Vector3 finalThrowDirection = (charCamera.transform.forward + throwDirection).normalized;
+        Vector3 finalThrowDirection = (model.forward + Vector3.up * throwDirection.y).normalized;
+
         rb.AddForce(finalThrowDirection * force, ForceMode.VelocityChange);
 
-        //throw sound effect
+        GrenadeAudioManager.instance.PlayOneShot(throwSound, 0.5f);
     }
 
-
+    void ShowTrajectory(Vector3 origin, Vector3 speed)
+    {
+        Vector3[] points = new Vector3[100];
+        trajectoryLine.positionCount = points.Length;
+        for (int i = 0; i < points.Length; i++)
+        {
+            float t = i * 0.1f;
+            points[i] = origin + speed * t + 0.5f * Physics.gravity * t * t;
+        }
+        trajectoryLine.SetPositions(points);
+    }
 }

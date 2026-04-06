@@ -2,12 +2,12 @@ using UnityEngine;
 
 public class SheepMovement : MonoBehaviour
 {
-    public float runSpeed = 5f;
+    public float runSpeed = 10f;
 
     private Vector3 runDirection;
     private bool isRunning = false;
     private float runTimer = 0f;
-    private float runDuration = 3f;
+    private float runDuration = 5f;
     [SerializeField] private AudioClip[] goatScreams;
     AudioSource audioSrc;
     void Start()
@@ -34,21 +34,24 @@ public class SheepMovement : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") || other.CompareTag("Grenade"))
         {
-            if (goatScreams.Length > 0)
-            {
-                AudioClip scream = goatScreams[Random.Range(0, goatScreams.Length)];
-                audioSrc.PlayOneShot(scream);
-            }
-            Vector3 direction = transform.position - other.transform.position;
-
-            direction.y = 0f; // ignore vertical difference
-
-            runDirection = direction.normalized;
-
-            isRunning = true;
-            runTimer = 0f;
+            RunAwayFrom(other.transform.position);
         }
+    }
+    public void RunAwayFrom(Vector3 threatPosition)
+    {
+        if (goatScreams.Length > 0)
+        {
+            AudioClip scream = goatScreams[Random.Range(0, goatScreams.Length)];
+            audioSrc.PlayOneShot(scream);
+        }
+
+        Vector3 direction = transform.position - threatPosition;
+        direction.y = 0f;
+
+        runDirection = direction.normalized;
+        isRunning = true;
+        runTimer = 0f;
     }
 }
