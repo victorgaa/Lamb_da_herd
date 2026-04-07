@@ -1,8 +1,9 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class GameManager : MonoBehaviour
 {
-    //[SerializeField] private GameObject player;
     [SerializeField] private GameObject goatPrefab;
 
     private const int goatCount = 9;
@@ -13,8 +14,27 @@ public class GameManager : MonoBehaviour
     private int scoreP2 = 0;
     private float MAXSPAWNRANGEX = 34.5f;
     private float MAXSPAWNRANGEZ = 34.5f;
+
+    [SerializeField] private UIManager UIManager;
+    private void Awake()
+    {
+        Messenger.AddListener(GameEvent.GOAT_CAPTURED_P1, OnGoatCapturedP1);
+        Messenger.AddListener(GameEvent.GOAT_CAPTURED_P2, OnGoatCapturedP2);
+        Messenger<int>.AddListener(GameEvent.QUANTITY_CHANGED, OnQuantityChanged);
+
+        Messenger.AddListener(GameEvent.RESTART_GAME, OnRestartGame);
+    }
+    private void OnDestroy()
+    {
+        Messenger.RemoveListener(GameEvent.GOAT_CAPTURED_P1, OnGoatCapturedP1);
+        Messenger.RemoveListener(GameEvent.GOAT_CAPTURED_P2, OnGoatCapturedP2);
+        Messenger<int>.RemoveListener(GameEvent.QUANTITY_CHANGED, OnQuantityChanged);
+
+        Messenger.RemoveListener(GameEvent.RESTART_GAME, OnRestartGame);
+    }
     void Start()
     {
+        UIManager.UpdateScores(scoreP1, scoreP2);
         SpawnPoints();
         InitialGoats();
     }
@@ -27,6 +47,25 @@ public class GameManager : MonoBehaviour
                 goats[i] = CreateGoat(spawnPoints[i]);
             }
         }
+    }
+    private void OnQuantityChanged(int newQuantity)
+    {
+        Debug.Log("Scene.OnQuantityChanged(" + newQuantity + ")");
+        for (int i = 0; i < goats.Length; i++)
+        {
+            //WanderingAI ai = enemies[i].GetComponent<WanderingAI>();
+            //ai.SetDifficulty(newDifficulty);
+        }
+    }
+    private void OnGoatCapturedP1()
+    {
+        scoreP1++;
+        UIManager.UpdateScores(scoreP1, scoreP2);
+    }
+    private void OnGoatCapturedP2()
+    {
+        scoreP2++;
+        UIManager.UpdateScores(scoreP1, scoreP2);
     }
     void SpawnPoints()
     {
@@ -60,5 +99,10 @@ public class GameManager : MonoBehaviour
     GameObject CreateGoat(Vector3 pos) {
         GameObject goat = Instantiate(goatPrefab, pos, Quaternion.identity);
         return goat;
+    }
+
+    public void OnRestartGame()
+    {
+        SceneManager.LoadScene(0);
     }
 }

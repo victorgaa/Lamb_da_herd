@@ -27,10 +27,16 @@ public class GrenadeThrower : MonoBehaviour
     [SerializeField] private AudioClip pullPinSound;
     [SerializeField] private AudioClip throwSound;
 
+    [Header("UI Manager")]
+    [SerializeField] private UIManager uiManager;
     private bool isCharging = false;
     private float chargeTime = 0f;
     private void Update()
     {
+        if (!uiManager.IsGameActive)
+        {
+            return;
+        }
         if (Input.GetKeyDown(throwKey)) // Left mouse button
         {
             StartThrowing();

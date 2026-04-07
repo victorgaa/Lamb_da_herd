@@ -4,23 +4,23 @@ using UnityEngine.UI;
 public class SettingsPopup : BasePopup
 {
     [SerializeField] private OptionsPopup optionsPopup;
-    [SerializeField] private TextMeshProUGUI difficultyLabel;
-    [SerializeField] private Slider difficultySlider;
+    [SerializeField] private TextMeshProUGUI quantityLabel;
+    [SerializeField] private Slider quantitySlider;
     public override void Open()
     {
         base.Open();
-        difficultySlider.value = PlayerPrefs.GetInt("difficulty", 1);
-        UpdateDifficulty(difficultySlider.value);
+        quantitySlider.value = PlayerPrefs.GetInt("Quantity", 1);
+        UpdateQuantity(quantitySlider.value);
     }
 
     void Start()
     {
-        UpdateDifficulty(difficultySlider.value);
+        UpdateQuantity(quantitySlider.value);
     }
     public void OnOKButton()
     {
-        PlayerPrefs.SetInt("difficulty", (int)difficultySlider.value);
-        //Messenger<int>.Broadcast(GameEvent.DIFFICULTY_CHANGED, (int)difficultySlider.value);
+        PlayerPrefs.SetInt("Quantity", (int)quantitySlider.value);
+        Messenger<int>.Broadcast(GameEvent.QUANTITY_CHANGED, (int)quantitySlider.value);
         Close();
         optionsPopup.Open();
     }
@@ -29,12 +29,13 @@ public class SettingsPopup : BasePopup
         Close();
         optionsPopup.Open();
     }
-    public void UpdateDifficulty(float difficulty)
+    public void UpdateQuantity(float quantity)
     {
-        difficultyLabel.text = "Difficulty: " +((int)difficulty).ToString();
+        quantityLabel.text = "Quantity: " + ((int)quantity).ToString();
     }
-    public void OnDifficultyValueChanged(float difficulty)
+    public void OnQuantityValueChanged(float quantity)
     {
-        UpdateDifficulty(difficulty);
+        //UpdateQuantity(quantity);
+        UpdateQuantity(quantitySlider.value);
     }
 }

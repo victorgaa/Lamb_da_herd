@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Animator anim;
     [SerializeField] private GameObject model;
     [SerializeField] private Camera cam;
+    [SerializeField] private UIManager uiManager;
 
     private float rotateToFaceMovementSpeed = 5f;
     private float rotateToFaceAwayFromCameraSpeed = 5f;
@@ -16,6 +17,10 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (!uiManager.IsGameActive) 
+        { 
+            return;
+        }
         // determine XZ movement vector
         float horizInput = Input.GetAxis("Horizontal");
         float vertInput = Input.GetAxis("Vertical");
