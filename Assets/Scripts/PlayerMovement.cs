@@ -14,24 +14,23 @@ public class PlayerMovement : MonoBehaviour
     private float rotateToFaceMovementSpeed = 5f;
     private float rotateToFaceAwayFromCameraSpeed = 5f;
     private float speed = 9.0f;         // XZ movement speed
-
+    private float verticalVelocity = 0f;
+    private float gravity = -9.81f;
     void Update()
     {
         if (!uiManager.IsGameActive) 
         { 
             return;
         }
-        // determine XZ movement vector
+
         float horizInput = Input.GetAxis("Horizontal");
         float vertInput = Input.GetAxis("Vertical");
         Vector3 movement = new Vector3(horizInput, 0, vertInput);
 
-        // ensure diagonal movement doesn't exceed horiz/vert movement speed
         movement = Vector3.ClampMagnitude(movement, 1.0f);
 
         anim.SetFloat("velocity", movement.magnitude);
 
-        // convert from local to global coordinates
         movement = transform.TransformDirection(movement);
 
         if (movement.magnitude > 0)
@@ -40,9 +39,22 @@ public class PlayerMovement : MonoBehaviour
             RotatePlayerToFaceAwayFromCamera();
         }
 
+        // Apply speed
         movement *= speed;
-        movement *= Time.deltaTime; // make all movement processor independent
-        cc.Move(movement);
+
+        // Apply gravity
+        if (cc.isGrounded)
+        {
+            verticalVelocity = -0.5f; // small downward force to keep grounded
+        }
+        else
+        {
+            verticalVelocity += gravity * Time.deltaTime;
+        }
+
+        movement.y = verticalVelocity;
+
+        cc.Move(movement * Time.deltaTime);
     }
 
 

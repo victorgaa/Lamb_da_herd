@@ -22,6 +22,7 @@ public class SheepMovement : MonoBehaviour
     private bool isAvoidingWall = false;
     private float avoidTimer = 0f;
     private float avoidDuration = 1.5f;
+    private bool hasScored = false;
 
     void Start()
     {
@@ -68,7 +69,6 @@ public class SheepMovement : MonoBehaviour
             }
 
             transform.position += runDirection * runSpeed * Time.deltaTime;
-
             if (runDirection != Vector3.zero)
             {
                 Quaternion targetRotation = Quaternion.LookRotation(runDirection);
@@ -95,9 +95,24 @@ public class SheepMovement : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (hasScored) return;
         if (other.CompareTag("Player") || other.CompareTag("Grenade"))
         {
             RunAwayFrom(other.transform.position);
+        }
+        else if (other.CompareTag("GoalNorth"))
+        {
+            hasScored = true;
+            Messenger.Broadcast(GameEvent.GOAT_CAPTURED_P1);
+            Debug.Log("North Goal!");
+            Destroy(gameObject);
+        }
+        else if (other.CompareTag("GoalSouth"))
+        {
+            hasScored = true;
+            Messenger.Broadcast(GameEvent.GOAT_CAPTURED_P2);
+            Debug.Log("South Goal!");
+            Destroy(gameObject);
         }
     }
 

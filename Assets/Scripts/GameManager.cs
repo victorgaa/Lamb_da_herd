@@ -6,9 +6,9 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject goatPrefab;
 
-    private const int goatCount = 9;
+    private const int goatCount = 17;
     GameObject[] goats = new GameObject[goatCount];
-    Vector3[] spawnPoints;
+    //Vector3[] spawnPoints;
 
     private int scoreP1 = 0;
     private int scoreP2 = 0;
@@ -35,8 +35,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         UIManager.UpdateScores(scoreP1, scoreP2);
-        SpawnPoints();
-        InitialGoats();
+ 
     }
     void Update()
     {
@@ -44,7 +43,8 @@ public class GameManager : MonoBehaviour
         {
             if (goats[i] == null)
             {
-                goats[i] = CreateGoat(spawnPoints[i]);
+                Vector3 newPos = GetRandomSpawnPosition();
+                goats[i] = CreateGoat(newPos);
             }
         }
     }
@@ -53,8 +53,14 @@ public class GameManager : MonoBehaviour
         Debug.Log("Scene.OnQuantityChanged(" + newQuantity + ")");
         for (int i = 0; i < goats.Length; i++)
         {
-            //WanderingAI ai = enemies[i].GetComponent<WanderingAI>();
-            //ai.SetDifficulty(newDifficulty);
+            if (goats[i] != null)
+            {
+                SheepMovement sheepMovement = goats[i].GetComponent<SheepMovement>();
+                if (sheepMovement != null)
+                {
+                    sheepMovement.runSpeed = newQuantity;
+                }
+            }
         }
     }
     private void OnGoatCapturedP1()
@@ -67,35 +73,34 @@ public class GameManager : MonoBehaviour
         scoreP2++;
         UIManager.UpdateScores(scoreP1, scoreP2);
     }
-    void SpawnPoints()
+    private Vector3 GetRandomSpawnPosition()
     {
-        spawnPoints = new Vector3[goatCount];
-        int i = 0;
+        Vector3 pos;
+        bool valid;
+        int attempts = 0;
 
-        if (goatCount % 2 == 1)
-        {
-            spawnPoints[i++] = new Vector3(0f, 0f, 0f);
-        }
-
-        while (i < goatCount)
+        do
         {
             float x = Random.Range(-MAXSPAWNRANGEX, MAXSPAWNRANGEX);
             float z = Random.Range(-MAXSPAWNRANGEZ, MAXSPAWNRANGEZ);
+            pos = new Vector3(x, 0f, z);
 
-            spawnPoints[i++] = new Vector3(x, 0f, z);
-
-            if (i < goatCount) 
-            { 
-                spawnPoints[i++] = new Vector3(-x, 0f, -z);
+            valid = true;
+            foreach (var goat in goats)
+            {
+                if (goat != null && Vector3.Distance(goat.transform.position, pos) < 2f)
+                {
+                    valid = false;
+                    break;
+                }
             }
-        }
+
+            attempts++;
+        } while (!valid && attempts < 10);
+
+        return pos;
     }
-    void InitialGoats() {
-        for (int i = 0; i < goatCount; i++)
-        {
-            goats[i] = CreateGoat(spawnPoints[i]);
-        }
-    }
+
     GameObject CreateGoat(Vector3 pos) {
         GameObject goat = Instantiate(goatPrefab, pos, Quaternion.identity);
         return goat;

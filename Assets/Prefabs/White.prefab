@@ -55,8 +55,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8c02bca7dc7538e4aaa0c7fde2c0cb88, type: 3}
   - {fileID: 8300000, guid: c766479672c810d4ca20eac424b177fe, type: 3}
   - {fileID: 8300000, guid: 856a6eb5652c9284ca4a0b3a9213dae3, type: 3}
-  NorthGoal: {fileID: 0}
-  SouthGoal: {fileID: 0}
   raycastOnlyLayer:
     serializedVersion: 2
     m_Bits: 64

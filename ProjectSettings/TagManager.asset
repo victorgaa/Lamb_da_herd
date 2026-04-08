@@ -6,6 +6,8 @@ TagManager:
   tags:
   - ActiveSheep
   - Grenade
+  - GoalNorth
+  - GoalSouth
   layers:
   - Default
   - TransparentFX
