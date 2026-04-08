@@ -38,6 +38,10 @@ public class PlayerMovement : MonoBehaviour
             RotateModelToFaceMovement(movement);
             RotatePlayerToFaceAwayFromCamera();
         }
+        else if(Input.GetMouseButton(0))
+        {
+            RotatePlayerToFaceAwayFromCamera();
+        }
 
         // Apply speed
         movement *= speed;

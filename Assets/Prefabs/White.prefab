@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1929233981521154483}
   - component: {fileID: 6995656621791055516}
   - component: {fileID: 8641200059401434937}
+  - component: {fileID: 4833484670132320783}
   m_Layer: 0
   m_Name: White
   m_TagString: ActiveSheep
@@ -58,6 +59,7 @@ MonoBehaviour:
   raycastOnlyLayer:
     serializedVersion: 2
     m_Bits: 64
+  rb: {fileID: 4833484670132320783}
 --- !u!65 &1929233981521154483
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -98,8 +100,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.7, y: 1.7, z: 1.7}
-  m_Center: {x: 0, y: 0, z: -0.65}
+  m_Size: {x: 1.7000002, y: 1.9873959, z: 1.7000002}
+  m_Center: {x: 0, y: 1.0104873, z: -0.65}
 --- !u!82 &8641200059401434937
 AudioSource:
   m_ObjectHideFlags: 0
@@ -197,6 +199,33 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!54 &4833484670132320783
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3510213296537911726}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 80
+  m_CollisionDetection: 2
 --- !u!1 &5482206803875594840
 GameObject:
   m_ObjectHideFlags: 0
@@ -4989,7 +5018,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: e823cd5b5d27c0f4b8256e7c12ee3e6d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

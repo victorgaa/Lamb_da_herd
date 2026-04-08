@@ -11,6 +11,7 @@ public class Grenade : MonoBehaviour
     [Header("Explosion Settings")]
     [SerializeField] private float explosionDelay = 3f; 
     [SerializeField] private float explosionRadius = 10f;
+    [SerializeField] private float explosionForce = 1f;
 
     [Header("Audio Effects")]
     [SerializeField] private AudioClip explosionSound;
@@ -71,7 +72,7 @@ public class Grenade : MonoBehaviour
             SheepMovement sheep = nearbyObject.GetComponent<SheepMovement>();
             if (sheep != null)
             {
-                sheep.RunAwayFrom(transform.position);
+                sheep.RunAwayFrom(transform.position, explosionForce);
             }
         }
     }
