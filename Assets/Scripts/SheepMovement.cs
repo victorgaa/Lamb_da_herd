@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class SheepMovement : MonoBehaviour
@@ -104,15 +105,13 @@ public class SheepMovement : MonoBehaviour
         {
             hasScored = true;
             Messenger.Broadcast(GameEvent.GOAT_CAPTURED_P1);
-            Debug.Log("North Goal!");
-            Destroy(gameObject);
+            StartCoroutine(DestroyAfterSound());
         }
         else if (other.CompareTag("GoalSouth"))
         {
             hasScored = true;
             Messenger.Broadcast(GameEvent.GOAT_CAPTURED_P2);
-            Debug.Log("South Goal!");
-            Destroy(gameObject);
+            StartCoroutine(DestroyAfterSound());
         }
     }
 
@@ -142,5 +141,17 @@ public class SheepMovement : MonoBehaviour
 
         Debug.DrawLine(transform.position, rangeTest);
         Gizmos.DrawWireSphere(rangeTest, sphereRadius);
+    }
+    private IEnumerator DestroyAfterSound()
+    {
+        
+        if (goatScreams.Length > 0)
+        {
+            AudioClip scream = goatScreams[Random.Range(0, goatScreams.Length)];
+            audioSrc.PlayOneShot(scream);
+            yield return new WaitForSeconds(scream.length); 
+        }
+
+        Destroy(gameObject); 
     }
 }

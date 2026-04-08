@@ -4,8 +4,12 @@ using TMPro;
 
 public class UIManager : MonoBehaviour
 {
+    [Header("Labels")]
     [SerializeField] private TextMeshProUGUI scoreP1;
     [SerializeField] private TextMeshProUGUI scoreP2;
+    [SerializeField] private TextMeshProUGUI timerText;
+
+    [Header("Popups")]
     [SerializeField] private OptionsPopup optionsPopup;
     [SerializeField] private SettingsPopup settingsPopup;
     [SerializeField] private GameOverPopup gameOverPopup;
@@ -31,8 +35,12 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void ShowGameOverPopup()
+    public void ShowGameOverPopup(int winner)
     {
+        if (scoreP1 != null) scoreP1.gameObject.SetActive(false);
+        if (scoreP2 != null) scoreP2.gameObject.SetActive(false);
+        if (timerText != null) timerText.gameObject.SetActive(false);
+        gameOverPopup.SetPlayerLabel(winner);
         gameOverPopup.Open();
     }
     public void UpdateScores(int scorePlayer1, int scorePlayer2)
@@ -75,5 +83,11 @@ public class UIManager : MonoBehaviour
         {
             SetGameActive(true);
         }
+    }
+    public void UpdateTimer(float time)
+    {
+        int minutes = Mathf.FloorToInt(time / 60);
+        int seconds = Mathf.FloorToInt(time % 60);
+        timerText.text = $"{minutes:00}:{seconds:00}";
     }
 }

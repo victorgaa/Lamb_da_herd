@@ -1,23 +1,38 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.SocialPlatforms.Impl;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private GameObject goatPrefab;
-
     private const int goatCount = 17;
     GameObject[] goats = new GameObject[goatCount];
-    //Vector3[] spawnPoints;
 
     private int scoreP1 = 0;
     private int scoreP2 = 0;
     private float MAXSPAWNRANGEX = 34.5f;
     private float MAXSPAWNRANGEZ = 34.5f;
 
+    private float remainingTime;
+    private bool isTimerPaused = false;
+
+    [Header("Prefabs")]
+    [SerializeField] private GameObject goatPrefab;
+
+    [Header("Game Configuration")]
+    [SerializeField] private float matchDuration = 180f; // 3 minutes in seconds
+
+    [Header("Game Manager")]
     [SerializeField] private UIManager UIManager;
+
+    [Header("Audio")]
+    [SerializeField] private AudioClip whistle;
+    private AudioSource audioSource;
+
     private void Awake()
     {
+        audioSource = GetComponent<AudioSource>();
+
         Messenger.AddListener(GameEvent.GOAT_CAPTURED_P1, OnGoatCapturedP1);
         Messenger.AddListener(GameEvent.GOAT_CAPTURED_P2, OnGoatCapturedP2);
         Messenger<int>.AddListener(GameEvent.QUANTITY_CHANGED, OnQuantityChanged);
@@ -35,7 +50,13 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         UIManager.UpdateScores(scoreP1, scoreP2);
- 
+        remainingTime = matchDuration;
+        StartCoroutine(MatchTimer());
+
+        if (whistle != null)
+        {
+            audioSource.PlayOneShot(whistle);
+        }
     }
     void Update()
     {
@@ -105,7 +126,51 @@ public class GameManager : MonoBehaviour
         GameObject goat = Instantiate(goatPrefab, pos, Quaternion.identity);
         return goat;
     }
+    private IEnumerator MatchTimer()
+    {
+        while (remainingTime > 0)
+        {
+            if (!isTimerPaused)
+            {
+                remainingTime -= Time.deltaTime;
+                UIManager.UpdateTimer(remainingTime); // optional: display timer in UI
+            }
+            yield return null;
+        }
 
+        // Time's up
+        GameOver();
+    }
+    private void GameOver()
+    {
+        int winner = scoreP1 > scoreP2 ? 1 : (scoreP2 > scoreP1 ? 2 : 0); // 0 for tie
+
+        if (whistle != null)
+        {
+            StopAllAudio();
+            audioSource.PlayOneShot(whistle);
+        }
+        UIManager.ShowGameOverPopup(winner);
+        Debug.Log("Game Over!");
+    }
+    public void SetTimerPaused(bool paused)
+    {
+        isTimerPaused = paused;
+    }
+    private void StopAllAudio()
+    {
+        // Stop all goat sounds
+        foreach (var goat in goats)
+        {
+            AudioSource goatAudio = goat.GetComponent<AudioSource>();
+            if (goatAudio != null)
+                goatAudio.Stop();
+        }
+
+        // Stop game song
+        if (audioSource != null)
+            audioSource.Stop();
+    }
     public void OnRestartGame()
     {
         SceneManager.LoadScene(0);
