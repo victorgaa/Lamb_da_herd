@@ -16,10 +16,10 @@ TagManager:
   - Water
   - UI
   - RaycastOnly
-  - 
-  - 
-  - 
-  - 
+  - Sheep
+  - SheepWalls
+  - Player
+  - Grenade
   - 
   - 
   - 

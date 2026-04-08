@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8558786163584706785}
   - component: {fileID: 969702277665056908}
   - component: {fileID: 4021370692134951150}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Circle_low.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 3222517231086217596}
   - component: {fileID: 13830532264387954}
   - component: {fileID: 5985246624658767564}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Circle.004_low.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -183,7 +183,7 @@ GameObject:
   - component: {fileID: 3125152668651356622}
   - component: {fileID: 783336007041195048}
   - component: {fileID: 7663833059367244132}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Circle.002_low.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -269,7 +269,7 @@ GameObject:
   - component: {fileID: 7776270181195280572}
   - component: {fileID: 895757904059462739}
   - component: {fileID: 7027187405614679978}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Plane_low.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -355,7 +355,7 @@ GameObject:
   - component: {fileID: 7328827290474417372}
   - component: {fileID: 6473595591999313553}
   - component: {fileID: 4364727542835201969}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Spiral.002_low.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -443,7 +443,7 @@ GameObject:
   - component: {fileID: 2055909817992035476}
   - component: {fileID: 330224864021722800}
   - component: {fileID: 8658290789503581588}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Grenade
   m_TagString: Grenade
   m_Icon: {fileID: 0}
@@ -488,7 +488,6 @@ MonoBehaviour:
   explosionParticleOffset: {x: 0, y: 1, z: 0}
   audioSourcePrefab: {fileID: 538503049481493739, guid: 0d311d84d3635b243b0d32fbfc78633d, type: 3}
   explosionDelay: 3
-  explosionForce: 500
   explosionRadius: 10
   explosionSound: {fileID: 8300000, guid: 74e8b2d96ae9d7545a1a8bcfdf6c28dd, type: 3}
   impactSound: {fileID: 8300000, guid: a44786edd321a4244b37283aa32b3e4d, type: 3}
@@ -648,7 +647,7 @@ GameObject:
   - component: {fileID: 7320732234788040468}
   - component: {fileID: 8778403521259687015}
   - component: {fileID: 4413502594432140229}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Circle.001_low.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -734,7 +733,7 @@ GameObject:
   - component: {fileID: 6783580126359717246}
   - component: {fileID: 4864005965660565330}
   - component: {fileID: 5097946177451544405}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Circle.003_low.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}

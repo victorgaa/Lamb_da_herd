@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Grenade : MonoBehaviour
@@ -11,7 +12,7 @@ public class Grenade : MonoBehaviour
     [Header("Explosion Settings")]
     [SerializeField] private float explosionDelay = 3f; 
     [SerializeField] private float explosionRadius = 10f;
-    [SerializeField] private float explosionForce = 1f;
+    //[SerializeField] private float explosionForce = 40f;
 
     [Header("Audio Effects")]
     [SerializeField] private AudioClip explosionSound;
@@ -19,12 +20,13 @@ public class Grenade : MonoBehaviour
 
     private bool hasExploded = false;
     private float countdown;
-    private AudioSource audioSource;
-
     private void Start()
     {
         countdown = explosionDelay;
-        audioSource = GetComponent<AudioSource>();
+    }
+    public void SetExplosionForce(float newForce)
+    {
+        //explosionForce = newForce;
     }
 
     private void Update()
@@ -43,13 +45,9 @@ public class Grenade : MonoBehaviour
     void Explode() 
     {
         GameObject explosionEffect = Instantiate(explosionEffectPrefab, transform.position + explosionParticleOffset, Quaternion.identity);
-
         Destroy(explosionEffect, 2f); //2 seconds is the duration of the explosion effect
-
         PlaySoundAtPosition(explosionSound);
-
         ApplyExplosionCollision();
-
         Destroy(gameObject); //destroy the grenade object
     }
 
@@ -66,13 +64,25 @@ public class Grenade : MonoBehaviour
     void ApplyExplosionCollision()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
+        HashSet<SheepMovement> affectedSheep = new HashSet<SheepMovement>();
 
         foreach (Collider nearbyObject in colliders)
         {
-            SheepMovement sheep = nearbyObject.GetComponent<SheepMovement>();
-            if (sheep != null)
+            SheepMovement sheep = nearbyObject.GetComponentInParent<SheepMovement>();
+            
+            if (sheep != null && !affectedSheep.Contains(sheep))
             {
-                sheep.RunAwayFrom(transform.position, explosionForce);
+                affectedSheep.Add(sheep);
+                float explosionForce = sheep.explosionForce;//gets the value from the sheep
+
+                Vector3 direction = sheep.transform.position - transform.position;
+                direction.y = 0f;
+
+                float distance = direction.magnitude;
+                float falloff = Mathf.Clamp01(1 - (distance / explosionRadius));
+                float finalForce = explosionForce * falloff;
+
+                sheep.RunAwayFrom(direction, finalForce);
             }
         }
     }

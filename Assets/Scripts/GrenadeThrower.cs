@@ -91,7 +91,7 @@ public class GrenadeThrower : MonoBehaviour
             Physics.IgnoreCollision(grenadeCol, col);
         }
 
-        Vector3 finalThrowDirection = (model.forward + Vector3.up * throwDirection.y).normalized;
+        Vector3 finalThrowDirection = (charCamera.transform.forward + Vector3.up * throwDirection.y).normalized;
 
         rb.AddForce(finalThrowDirection * force, ForceMode.VelocityChange);
 

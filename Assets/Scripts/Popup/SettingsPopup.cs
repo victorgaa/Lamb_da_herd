@@ -31,7 +31,7 @@ public class SettingsPopup : BasePopup
     }
     public void UpdateQuantity(float quantity)
     {
-        quantityLabel.text = "Goat Speed: " + ((int)quantity).ToString();
+        quantityLabel.text = "Grenade Force: " + ((int)quantity).ToString();
     }
     public void OnQuantityValueChanged(float quantity)
     {

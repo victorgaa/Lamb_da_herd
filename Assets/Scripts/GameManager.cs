@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Prefabs")]
     [SerializeField] private GameObject goatPrefab;
+    [SerializeField] private GameObject grenadePrefab;
 
     [Header("Game Configuration")]
     [SerializeField] private float matchDuration = 180f; // 3 minutes in seconds
@@ -72,6 +73,7 @@ public class GameManager : MonoBehaviour
     private void OnQuantityChanged(int newQuantity)
     {
         Debug.Log("Scene.OnQuantityChanged(" + newQuantity + ")");
+
         for (int i = 0; i < goats.Length; i++)
         {
             if (goats[i] != null)
@@ -79,7 +81,7 @@ public class GameManager : MonoBehaviour
                 SheepMovement sheepMovement = goats[i].GetComponent<SheepMovement>();
                 if (sheepMovement != null)
                 {
-                    sheepMovement.runSpeed = newQuantity;
+                    sheepMovement.explosionForce = (float)newQuantity;
                 }
             }
         }
@@ -133,13 +135,11 @@ public class GameManager : MonoBehaviour
             if (!isTimerPaused)
             {
                 remainingTime -= Time.deltaTime;
-                UIManager.UpdateTimer(remainingTime); // optional: display timer in UI
+                UIManager.UpdateTimer(remainingTime); 
             }
             yield return null;
         }
-
-        // Time's up
-        GameOver();
+        GameOver(); // Time's up
     }
     private void GameOver()
     {
