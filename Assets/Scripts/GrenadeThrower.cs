@@ -51,6 +51,10 @@ public class GrenadeThrower : MonoBehaviour
         { 
             ReleaseThrow();
         }
+
+        //if (Input.GetKeyDown(throwKey)) { StartThrowing(); }
+        //if (isCharging) { ChargeThrow(); }
+        //if (Input.GetKeyUp(throwKey)) { ReleaseThrow(); }
     }
 
     void StartThrowing()
@@ -119,7 +123,7 @@ public class GrenadeThrower : MonoBehaviour
     private bool GetThrowInputDown()
     {
         if (inputType == InputType.KeyboardMouse)
-            return Input.GetButtonDown("Fire1"); // keyboard/mouse
+            return Input.GetButtonDown("Mouse_Grenade"); // keyboard/mouse
         else
             return Input.GetButtonDown("Gamepad_Grenade"); // gamepad
     }
@@ -127,7 +131,7 @@ public class GrenadeThrower : MonoBehaviour
     private bool GetThrowInputHold()
     {
         if (inputType == InputType.KeyboardMouse)
-            return Input.GetButton("Fire1");
+            return Input.GetButton("Mouse_Grenade");
         else
             return Input.GetButton("Gamepad_Grenade");
     }
@@ -135,7 +139,7 @@ public class GrenadeThrower : MonoBehaviour
     private bool GetThrowInputUp()
     {
         if (inputType == InputType.KeyboardMouse)
-            return Input.GetButtonUp("Fire1");
+            return Input.GetButtonUp("Mouse_Grenade");
         else
             return Input.GetButtonUp("Gamepad_Grenade");
     }
