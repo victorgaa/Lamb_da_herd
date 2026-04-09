@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour
         Messenger.AddListener(GameEvent.GOAT_CAPTURED_P1, OnGoatCapturedP1);
         Messenger.AddListener(GameEvent.GOAT_CAPTURED_P2, OnGoatCapturedP2);
         Messenger<int>.AddListener(GameEvent.QUANTITY_CHANGED, OnQuantityChanged);
+        Messenger<int>.AddListener(GameEvent.VOLUME_CHANGED, OnVolumeChanged);
 
         Messenger.AddListener(GameEvent.RESTART_GAME, OnRestartGame);
     }
@@ -45,6 +46,7 @@ public class GameManager : MonoBehaviour
         Messenger.RemoveListener(GameEvent.GOAT_CAPTURED_P1, OnGoatCapturedP1);
         Messenger.RemoveListener(GameEvent.GOAT_CAPTURED_P2, OnGoatCapturedP2);
         Messenger<int>.RemoveListener(GameEvent.QUANTITY_CHANGED, OnQuantityChanged);
+        Messenger<int>.RemoveListener(GameEvent.VOLUME_CHANGED, OnVolumeChanged);
 
         Messenger.RemoveListener(GameEvent.RESTART_GAME, OnRestartGame);
     }
@@ -72,8 +74,6 @@ public class GameManager : MonoBehaviour
     }
     private void OnQuantityChanged(int newQuantity)
     {
-        Debug.Log("Scene.OnQuantityChanged(" + newQuantity + ")");
-
         for (int i = 0; i < goats.Length; i++)
         {
             if (goats[i] != null)
@@ -84,6 +84,15 @@ public class GameManager : MonoBehaviour
                     sheepMovement.explosionForce = (float)newQuantity;
                 }
             }
+        }
+    }
+    private void OnVolumeChanged(int newQuantity)
+    {
+        float volume = Mathf.Clamp01(newQuantity / 100f);
+
+        if (audioSource != null)
+        {
+            audioSource.volume = volume;
         }
     }
     private void OnGoatCapturedP1()

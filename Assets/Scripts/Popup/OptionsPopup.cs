@@ -14,6 +14,11 @@ public class OptionsPopup : BasePopup
         Debug.Log("exit game");
         Application.Quit();
     }
+    public void OnStartAgainButton()
+    {
+        Close();
+        Messenger.Broadcast(GameEvent.RESTART_GAME);
+    }
     public void OnReturnToGameButton()
     {
         Close();

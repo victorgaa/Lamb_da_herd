@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Cinemachine;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,31 +13,45 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private UIManager uiManager;
     [SerializeField] private InputType inputType = InputType.KeyboardMouse;
 
+    //public CinemachineFreeLook freeLook;
+    public float horizontalSpeed = 200f;
+    public float verticalSpeed = 2f;
+
     private float rotateToFaceMovementSpeed = 5f;
     private float rotateToFaceAwayFromCameraSpeed = 5f;
     private float speed = 9.0f;         // XZ movement speed
     private float verticalVelocity = 0f;
     private float gravity = -9.81f;
-    void Update()
+
+        void Update()
     {
         if (!uiManager.IsGameActive) 
         { 
             return;
         }
-
+        
         float horizInput = 0f;
         float vertInput = 0f;
+        float camInputX = Input.GetAxis("Mouse X");
+        float camInputY = Input.GetAxis("Mouse Y");
 
         if (inputType == InputType.KeyboardMouse)
         {
             horizInput = Input.GetAxis("Horizontal");
             vertInput = Input.GetAxis("Vertical");
+            camInputX = Input.GetAxis("Mouse X");
+            camInputY = Input.GetAxis("Mouse Y");
         }
         else if (inputType == InputType.Gamepad)
         {
             horizInput = Input.GetAxis("Gamepad_Horizontal");
             vertInput = Input.GetAxis("Gamepad_Vertical");
+            camInputX = Input.GetAxis("Gamepad_CamX");
+            camInputY = Input.GetAxis("Gamepad_CamY");
         }
+        //freeLook.m_XAxis.Value += camInputX * horizontalSpeed * Time.deltaTime;
+        //freeLook.m_YAxis.Value -= camInputY * verticalSpeed * Time.deltaTime;
+
         Vector3 movement = new Vector3(horizInput, 0, vertInput);
 
         movement = Vector3.ClampMagnitude(movement, 1.0f);
