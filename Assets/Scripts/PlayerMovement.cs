@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private GameObject model;
     [SerializeField] private Camera cam;
     [SerializeField] private UIManager uiManager;
+    [SerializeField] private InputType inputType = InputType.KeyboardMouse;
 
     private float rotateToFaceMovementSpeed = 5f;
     private float rotateToFaceAwayFromCameraSpeed = 5f;
@@ -23,8 +24,19 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        float horizInput = Input.GetAxis("Horizontal");
-        float vertInput = Input.GetAxis("Vertical");
+        float horizInput = 0f;
+        float vertInput = 0f;
+
+        if (inputType == InputType.KeyboardMouse)
+        {
+            horizInput = Input.GetAxis("Horizontal");
+            vertInput = Input.GetAxis("Vertical");
+        }
+        else if (inputType == InputType.Gamepad)
+        {
+            horizInput = Input.GetAxis("Gamepad_Horizontal");
+            vertInput = Input.GetAxis("Gamepad_Vertical");
+        }
         Vector3 movement = new Vector3(horizInput, 0, vertInput);
 
         movement = Vector3.ClampMagnitude(movement, 1.0f);
@@ -76,6 +88,11 @@ public class PlayerMovement : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, camRotation, rotateToFaceAwayFromCameraSpeed * Time.deltaTime);
     }
 
+    public enum InputType
+    {
+        KeyboardMouse,
+        Gamepad
+    }
     private void OnDrawGizmos()
     {
         // make the source 1.5 units up from the player's pivot point (at their chest instead of their feet)

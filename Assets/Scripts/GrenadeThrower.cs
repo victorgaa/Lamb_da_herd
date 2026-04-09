@@ -6,11 +6,10 @@ public class GrenadeThrower : MonoBehaviour
     [SerializeField] private GameObject grenadePrefab;
 
     [Header("Grenade Settings")]
-    [SerializeField] private KeyCode throwKey = KeyCode.Mouse0; // Default to left mouse button
+    [SerializeField] private InputType inputType = InputType.KeyboardMouse;
     [SerializeField] private Transform throwPosition;
     [SerializeField] private Vector3 throwDirection = new Vector3(0, 1, 0); // Default to left mouse button
 
-    
     [Header("Grenade Force")]
     [SerializeField] private float ThrowForce = 10f;
     [SerializeField] private float maxForce = 20f;
@@ -37,16 +36,19 @@ public class GrenadeThrower : MonoBehaviour
         {
             return;
         }
-        if (Input.GetKeyDown(throwKey)) // Left mouse button
-        {
+
+        if (GetThrowInputDown())
+        { 
             StartThrowing();
         }
-        if (isCharging) 
+
+        if (isCharging)
         { 
             ChargeThrow();
         }
-        if (Input.GetKeyUp(throwKey)) 
-        {
+
+        if (GetThrowInputUp())
+        { 
             ReleaseThrow();
         }
     }
@@ -108,5 +110,33 @@ public class GrenadeThrower : MonoBehaviour
             points[i] = origin + speed * t + 0.5f * Physics.gravity * t * t;
         }
         trajectoryLine.SetPositions(points);
+    }
+    public enum InputType
+    {
+        KeyboardMouse,
+        Gamepad
+    }
+    private bool GetThrowInputDown()
+    {
+        if (inputType == InputType.KeyboardMouse)
+            return Input.GetButtonDown("Fire1"); // keyboard/mouse
+        else
+            return Input.GetButtonDown("Gamepad_Grenade"); // gamepad
+    }
+
+    private bool GetThrowInputHold()
+    {
+        if (inputType == InputType.KeyboardMouse)
+            return Input.GetButton("Fire1");
+        else
+            return Input.GetButton("Gamepad_Grenade");
+    }
+
+    private bool GetThrowInputUp()
+    {
+        if (inputType == InputType.KeyboardMouse)
+            return Input.GetButtonUp("Fire1");
+        else
+            return Input.GetButtonUp("Gamepad_Grenade");
     }
 }
