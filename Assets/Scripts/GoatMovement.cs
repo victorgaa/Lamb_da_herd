@@ -46,13 +46,13 @@ public class SheepMovement : MonoBehaviour
         else if (other.CompareTag("GoalNorth"))
         {
             hasScored = true;
-            Messenger.Broadcast(GameEvent.GOAT_CAPTURED_P1);
+            Messenger<int>.Broadcast(GameEvent.GOAT_CAPTURED, 1);
             StartCoroutine(DestroyAfterSound());
         }
         else if (other.CompareTag("GoalSouth"))
         {
             hasScored = true;
-            Messenger.Broadcast(GameEvent.GOAT_CAPTURED_P2);
+            Messenger<int>.Broadcast(GameEvent.GOAT_CAPTURED, 2);
             StartCoroutine(DestroyAfterSound());
         }
     }

@@ -5,7 +5,7 @@ using UnityEngine.SocialPlatforms.Impl;
 
 public class GameManager : MonoBehaviour
 {
-    private const int goatCount = 17;
+    private const int goatCount = 27;
     GameObject[] goats = new GameObject[goatCount];
 
     private int scoreP1 = 0;
@@ -18,24 +18,23 @@ public class GameManager : MonoBehaviour
 
     [Header("Prefabs")]
     [SerializeField] private GameObject goatPrefab;
-    [SerializeField] private GameObject grenadePrefab;
 
     [Header("Game Configuration")]
-    [SerializeField] private float matchDuration = 180f; // 3 minutes in seconds
+    [SerializeField] private float matchDuration = 120f; // 2 minutes in seconds
 
     [Header("Game Manager")]
     [SerializeField] private UIManager UIManager;
 
     [Header("Audio")]
     [SerializeField] private AudioClip whistle;
+    [SerializeField] private AudioClip scoreSound;
     private AudioSource audioSource;
 
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
 
-        Messenger.AddListener(GameEvent.GOAT_CAPTURED_P1, OnGoatCapturedP1);
-        Messenger.AddListener(GameEvent.GOAT_CAPTURED_P2, OnGoatCapturedP2);
+        Messenger<int>.AddListener(GameEvent.GOAT_CAPTURED, OnGoatCaptured);
         Messenger<int>.AddListener(GameEvent.QUANTITY_CHANGED, OnQuantityChanged);
         Messenger<int>.AddListener(GameEvent.VOLUME_CHANGED, OnVolumeChanged);
 
@@ -43,8 +42,7 @@ public class GameManager : MonoBehaviour
     }
     private void OnDestroy()
     {
-        Messenger.RemoveListener(GameEvent.GOAT_CAPTURED_P1, OnGoatCapturedP1);
-        Messenger.RemoveListener(GameEvent.GOAT_CAPTURED_P2, OnGoatCapturedP2);
+        Messenger<int>.RemoveListener(GameEvent.GOAT_CAPTURED, OnGoatCaptured);
         Messenger<int>.RemoveListener(GameEvent.QUANTITY_CHANGED, OnQuantityChanged);
         Messenger<int>.RemoveListener(GameEvent.VOLUME_CHANGED, OnVolumeChanged);
 
@@ -95,14 +93,17 @@ public class GameManager : MonoBehaviour
             audioSource.volume = volume;
         }
     }
-    private void OnGoatCapturedP1()
+    private void OnGoatCaptured(int player)
     {
-        scoreP1++;
-        UIManager.UpdateScores(scoreP1, scoreP2);
-    }
-    private void OnGoatCapturedP2()
-    {
-        scoreP2++;
+        if (player == 1) 
+        {
+            scoreP1++;
+        }
+        else if (player == 2) 
+        {
+            scoreP2++;
+        }
+        audioSource.PlayOneShot(scoreSound);
         UIManager.UpdateScores(scoreP1, scoreP2);
     }
     private Vector3 GetRandomSpawnPosition()
@@ -159,7 +160,7 @@ public class GameManager : MonoBehaviour
             StopAllAudio();
             audioSource.PlayOneShot(whistle);
         }
-        UIManager.ShowGameOverPopup(winner);
+        UIManager.ShowGameOverPopup(winner, scoreP1, scoreP2);
         Debug.Log("Game Over!");
     }
     public void SetTimerPaused(bool paused)

@@ -5,6 +5,7 @@ using UnityEngine.SocialPlatforms.Impl;
 public class GameOverPopup : BasePopup
 {
     [SerializeField] private TextMeshProUGUI playerLabel;
+    [SerializeField] private TextMeshProUGUI scoreLabel;
     public void OnExitGameButton()
     {
         Debug.Log("Exiting Game");
@@ -15,11 +16,12 @@ public class GameOverPopup : BasePopup
         Close();
         Messenger.Broadcast(GameEvent.RESTART_GAME);
     }
-    public void SetPlayerLabel(int winner) 
+    public void SetPlayerLabel(int winner, int p1score, int p2score) 
     {
         if (winner == 1) 
         { 
             playerLabel.text = "Player 1 wins!";
+            
         }
         else if (winner == 2) 
         { 
@@ -29,5 +31,6 @@ public class GameOverPopup : BasePopup
         {
             playerLabel.text = "It's a tie!";
         }
+        scoreLabel.text = $"Score: {p1score} - {p2score}";
     }
 }

@@ -9,6 +9,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreP2;
     [SerializeField] private TextMeshProUGUI timerText;
 
+    [Header("Text Containers")]
+    [SerializeField] private GameObject scoreP1Container;
+    [SerializeField] private GameObject scoreP2Container;
+    [SerializeField] private GameObject timerContainer;
+
     [Header("Popups")]
     [SerializeField] private OptionsPopup optionsPopup;
     [SerializeField] private SettingsPopup settingsPopup;
@@ -35,12 +40,14 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void ShowGameOverPopup(int winner)
+    public void ShowGameOverPopup(int winner, int p1score, int p2score)
     {
-        if (scoreP1 != null) scoreP1.gameObject.SetActive(false);
-        if (scoreP2 != null) scoreP2.gameObject.SetActive(false);
+        if (scoreP1Container != null) scoreP1Container.SetActive(false);
+        if (scoreP2Container != null) scoreP2Container.SetActive(false);
+        if (timerContainer != null) timerContainer.SetActive(false);
+
         if (timerText != null) timerText.gameObject.SetActive(false);
-        gameOverPopup.SetPlayerLabel(winner);
+        gameOverPopup.SetPlayerLabel(winner, p1score, p2score);
         gameOverPopup.Open();
     }
     public void UpdateScores(int scorePlayer1, int scorePlayer2)
