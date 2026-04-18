@@ -2049,10 +2049,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   goatPrefab: {fileID: 3510213296537911726, guid: 1d4b7b1bcb53ed0468fcdc89fe6d652c, type: 3}
+  paintPickupPrefab: {fileID: 8497976080342767934, guid: 63947d878c4a2854aaad1aeed498946c, type: 3}
   matchDuration: 105
   UIManager: {fileID: 1901828343}
   whistle: {fileID: 8300000, guid: ec88d6968e9bab44ea9db7028449771e, type: 3}
   scoreSound: {fileID: 8300000, guid: 2a6a795b72a03204d91863110be48da8, type: 3}
+  bucketPickup: {fileID: 8300000, guid: c83160d9ab651d445840cf2b9c6424ec, type: 3}
 --- !u!4 &229558956
 Transform:
   m_ObjectHideFlags: 0

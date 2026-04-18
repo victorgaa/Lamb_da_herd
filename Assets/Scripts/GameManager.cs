@@ -16,8 +16,13 @@ public class GameManager : MonoBehaviour
     private float remainingTime;
     private bool isTimerPaused = false;
 
+    private float pickupSpawnDelay = 5f;
+    private float pickupSpawnInterval = 30f;
+    private GameObject currentPickup;
+
     [Header("Prefabs")]
     [SerializeField] private GameObject goatPrefab;
+    [SerializeField] private GameObject paintPickupPrefab;
 
     [Header("Game Configuration")]
     [SerializeField] private float matchDuration = 120f; // 2 minutes in seconds
@@ -28,6 +33,8 @@ public class GameManager : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private AudioClip whistle;
     [SerializeField] private AudioClip scoreSound;
+    [SerializeField] private AudioClip bucketPickup;
+
     private AudioSource audioSource;
 
     private void Awake()
@@ -37,6 +44,7 @@ public class GameManager : MonoBehaviour
         Messenger<int>.AddListener(GameEvent.GOAT_CAPTURED, OnGoatCaptured);
         Messenger<int>.AddListener(GameEvent.QUANTITY_CHANGED, OnQuantityChanged);
         Messenger<int>.AddListener(GameEvent.VOLUME_CHANGED, OnVolumeChanged);
+        Messenger<string>.AddListener(GameEvent.PICKUP_ITEM, OnPickupItem);
 
         Messenger.AddListener(GameEvent.RESTART_GAME, OnRestartGame);
     }
@@ -45,6 +53,7 @@ public class GameManager : MonoBehaviour
         Messenger<int>.RemoveListener(GameEvent.GOAT_CAPTURED, OnGoatCaptured);
         Messenger<int>.RemoveListener(GameEvent.QUANTITY_CHANGED, OnQuantityChanged);
         Messenger<int>.RemoveListener(GameEvent.VOLUME_CHANGED, OnVolumeChanged);
+        Messenger<string>.RemoveListener(GameEvent.PICKUP_ITEM, OnPickupItem);
 
         Messenger.RemoveListener(GameEvent.RESTART_GAME, OnRestartGame);
     }
@@ -52,7 +61,9 @@ public class GameManager : MonoBehaviour
     {
         UIManager.UpdateScores(scoreP1, scoreP2);
         remainingTime = matchDuration;
+
         StartCoroutine(MatchTimer());
+        StartCoroutine(PickupSpawner());
 
         if (whistle != null)
         {
@@ -70,16 +81,36 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    private void OnPickupItem(string pickupType)
+    {
+        currentPickup = null;
+
+        if (pickupType == "Paint")
+        {
+            audioSource.PlayOneShot(bucketPickup);
+            for (int i = 0; i < goats.Length; i++)
+            {
+                if (goats[i] != null)
+                {
+                    SheepMovement goatScript = goats[i].GetComponent<SheepMovement>();
+                    if (goatScript != null)
+                    {
+                        goatScript.ReverseGoatType();
+                    }
+                }
+            }
+        }
+    }
     private void OnQuantityChanged(int newQuantity)
     {
         for (int i = 0; i < goats.Length; i++)
         {
             if (goats[i] != null)
             {
-                SheepMovement sheepMovement = goats[i].GetComponent<SheepMovement>();
-                if (sheepMovement != null)
+                SheepMovement goatScript = goats[i].GetComponent<SheepMovement>();
+                if (goatScript != null)
                 {
-                    sheepMovement.explosionForce = (float)newQuantity;
+                    goatScript.explosionForce = (float)newQuantity;
                 }
             }
         }
@@ -93,15 +124,23 @@ public class GameManager : MonoBehaviour
             audioSource.volume = volume;
         }
     }
-    private void OnGoatCaptured(int player)
+    private void OnGoatCaptured(int captureValue)
     {
-        if (player == 1) 
+        if (captureValue == 1) 
         {
             scoreP1++;
         }
-        else if (player == 2) 
+        else if (captureValue == 2) 
         {
             scoreP2++;
+        }
+        else if (captureValue == 3) 
+        {
+            scoreP1--;
+        } 
+        else if (captureValue == 4) 
+        {
+            scoreP2--;
         }
         audioSource.PlayOneShot(scoreSound);
         UIManager.UpdateScores(scoreP1, scoreP2);
@@ -136,6 +175,11 @@ public class GameManager : MonoBehaviour
 
     GameObject CreateGoat(Vector3 pos) {
         GameObject goat = Instantiate(goatPrefab, pos, Quaternion.identity);
+        int randomizeType = Random.Range(0, 10); // 10% chance for black goat, 90% chance for white goat
+        if (randomizeType == 0) 
+        { 
+            goat.GetComponent<SheepMovement>().ReverseGoatType(); // default is white, so reverse to black if randomizeType is 0
+        }
         return goat;
     }
     private IEnumerator MatchTimer()
@@ -151,6 +195,23 @@ public class GameManager : MonoBehaviour
         }
         GameOver(); // Time's up
     }
+    private IEnumerator PickupSpawner()
+    {
+        yield return new WaitForSeconds(pickupSpawnDelay);
+
+        while (true)
+        {
+            SpawnPickup();
+            yield return new WaitForSeconds(pickupSpawnInterval);
+        }
+    }
+    private void SpawnPickup()
+    {
+        if (currentPickup != null) return;
+
+        Vector3 spawnPos = GetRandomSpawnPosition();
+        currentPickup = Instantiate(paintPickupPrefab, spawnPos, Quaternion.identity);
+    }
     private void GameOver()
     {
         int winner = scoreP1 > scoreP2 ? 1 : (scoreP2 > scoreP1 ? 2 : 0); // 0 for tie
@@ -161,7 +222,6 @@ public class GameManager : MonoBehaviour
             audioSource.PlayOneShot(whistle);
         }
         UIManager.ShowGameOverPopup(winner, scoreP1, scoreP2);
-        Debug.Log("Game Over!");
     }
     public void SetTimerPaused(bool paused)
     {

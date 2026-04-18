@@ -1,5 +1,7 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.InputSystem.Controls.DiscreteButtonControl;
 
 public class SheepMovement : MonoBehaviour
 {
@@ -13,6 +15,10 @@ public class SheepMovement : MonoBehaviour
     [Header("Rigid Body")]
     [SerializeField] private Rigidbody rb;
 
+    [Header("Models")]
+    [SerializeField] private GameObject whiteModel;
+    [SerializeField] private GameObject blackModel;
+
     private AudioSource audioSrc;
 
     public float maxRunSpeed = 10f;
@@ -22,6 +28,7 @@ public class SheepMovement : MonoBehaviour
     //to avoid multiple triggers from the same explosion
     private float lastHitTime;
     private float hitCooldown = 0.1f;
+    private GoatType goatType = GoatType.white;
 
     void Start()
     {
@@ -46,13 +53,27 @@ public class SheepMovement : MonoBehaviour
         else if (other.CompareTag("GoalNorth"))
         {
             hasScored = true;
-            Messenger<int>.Broadcast(GameEvent.GOAT_CAPTURED, 1);
+            if (goatType == GoatType.white)
+            {
+                Messenger<int>.Broadcast(GameEvent.GOAT_CAPTURED, 1); // P1score++
+            }
+            else if (goatType == GoatType.black)
+            {
+                Messenger<int>.Broadcast(GameEvent.GOAT_CAPTURED, 3); // P1score--
+            }
             StartCoroutine(DestroyAfterSound());
         }
         else if (other.CompareTag("GoalSouth"))
         {
             hasScored = true;
-            Messenger<int>.Broadcast(GameEvent.GOAT_CAPTURED, 2);
+            if (goatType == GoatType.white)
+            {
+                Messenger<int>.Broadcast(GameEvent.GOAT_CAPTURED, 2); // P2score++
+            }
+            else if (goatType == GoatType.black)
+            {
+                Messenger<int>.Broadcast(GameEvent.GOAT_CAPTURED, 4); // P2score--
+            }
             StartCoroutine(DestroyAfterSound());
         }
     }
@@ -97,5 +118,23 @@ public class SheepMovement : MonoBehaviour
         }
 
         Destroy(gameObject); 
+    }
+    public void ReverseGoatType()
+    {
+        if (goatType == GoatType.white)
+        {
+            goatType = GoatType.black;
+        }
+        else
+        {
+            goatType = GoatType.white;
+        }
+        whiteModel.SetActive(goatType == GoatType.white);
+        blackModel.SetActive(goatType == GoatType.black);
+    }
+    public enum GoatType
+    {
+        white,
+        black
     }
 }

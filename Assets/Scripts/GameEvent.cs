@@ -8,4 +8,5 @@ public static class GameEvent
     public const string QUANTITY_CHANGED = "QUANTITY_CHANGED";
     public const string VOLUME_CHANGED = "VOLUME_CHANGED";
     public const string GOAT_CAPTURED = "GOAT_CAPTURED";
+    public const string PICKUP_ITEM = "PICKUP_ITEM";
 }
