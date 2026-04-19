@@ -30,6 +30,9 @@ public class GrenadeThrower : MonoBehaviour
     [SerializeField] private UIManager uiManager;
     private bool isCharging = false;
     private float chargeTime = 0f;
+    private float delayBetweenThrows = 0.5f;
+    private float lastThrowTime = 0f;
+
     private void Update()
     {
         if (!uiManager.IsGameActive)
@@ -38,7 +41,7 @@ public class GrenadeThrower : MonoBehaviour
         }
 
         if (GetThrowInputDown())
-        { 
+        {
             StartThrowing();
         }
 
@@ -52,9 +55,6 @@ public class GrenadeThrower : MonoBehaviour
             ReleaseThrow();
         }
 
-        //if (Input.GetKeyDown(throwKey)) { StartThrowing(); }
-        //if (isCharging) { ChargeThrow(); }
-        //if (Input.GetKeyUp(throwKey)) { ReleaseThrow(); }
     }
 
     void StartThrowing()
@@ -77,7 +77,14 @@ public class GrenadeThrower : MonoBehaviour
 
     void ReleaseThrow() 
     {
-        ThrowGrenade(Mathf.Min(chargeTime * ThrowForce, maxForce));
+        bool canThrow = Time.time - lastThrowTime >= delayBetweenThrows;
+
+        if (canThrow)
+        {
+            ThrowGrenade(Mathf.Min(chargeTime * ThrowForce, maxForce));
+            lastThrowTime = Time.time;
+        }
+
         isCharging = false;
         trajectoryLine.enabled = false;
     }

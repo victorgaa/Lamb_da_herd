@@ -20,6 +20,8 @@ public class GameManager : MonoBehaviour
     private float pickupSpawnInterval = 30f;
     private GameObject currentPickup;
 
+    private float goatVolume; 
+
     [Header("Prefabs")]
     [SerializeField] private GameObject goatPrefab;
     [SerializeField] private GameObject paintPickupPrefab;
@@ -43,7 +45,8 @@ public class GameManager : MonoBehaviour
 
         Messenger<int>.AddListener(GameEvent.GOAT_CAPTURED, OnGoatCaptured);
         Messenger<int>.AddListener(GameEvent.QUANTITY_CHANGED, OnQuantityChanged);
-        Messenger<int>.AddListener(GameEvent.VOLUME_CHANGED, OnVolumeChanged);
+        Messenger<int>.AddListener(GameEvent.SONG_VOLUME_CHANGED, OnSongVolumeChanged);
+        Messenger<int>.AddListener(GameEvent.GOAT_VOLUME_CHANGED, OnGoatVolumeChanged);
         Messenger<string>.AddListener(GameEvent.PICKUP_ITEM, OnPickupItem);
 
         Messenger.AddListener(GameEvent.RESTART_GAME, OnRestartGame);
@@ -52,7 +55,8 @@ public class GameManager : MonoBehaviour
     {
         Messenger<int>.RemoveListener(GameEvent.GOAT_CAPTURED, OnGoatCaptured);
         Messenger<int>.RemoveListener(GameEvent.QUANTITY_CHANGED, OnQuantityChanged);
-        Messenger<int>.RemoveListener(GameEvent.VOLUME_CHANGED, OnVolumeChanged);
+        Messenger<int>.RemoveListener(GameEvent.SONG_VOLUME_CHANGED, OnSongVolumeChanged);
+        Messenger<int>.RemoveListener(GameEvent.GOAT_VOLUME_CHANGED, OnGoatVolumeChanged);
         Messenger<string>.RemoveListener(GameEvent.PICKUP_ITEM, OnPickupItem);
 
         Messenger.RemoveListener(GameEvent.RESTART_GAME, OnRestartGame);
@@ -115,13 +119,31 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-    private void OnVolumeChanged(int newQuantity)
+    private void OnSongVolumeChanged(int newQuantity)
     {
-        float volume = Mathf.Clamp01(newQuantity / 100f);
+        float t = Mathf.Clamp01(newQuantity / 100f);
+        float volume = Mathf.Lerp(0f, 0.25f, t); // Scale the volume to a max of 0.25 to prevent it from being too loud
 
         if (audioSource != null)
         {
             audioSource.volume = volume;
+        }
+    }
+    private void OnGoatVolumeChanged(int newQuantity)
+    {
+        float t = Mathf.Clamp01(newQuantity / 100f);
+        goatVolume = Mathf.Lerp(0f, 0.25f, t); // Scale the volume to a max of 0.25 to prevent it from being too loud
+
+        for (int i = 0; i < goats.Length; i++)
+        {
+            if (goats[i] != null)
+            {
+                AudioSource goatAudio = goats[i].GetComponent<AudioSource>();
+                if (goatAudio != null)
+                {
+                    goatAudio.volume = goatVolume;
+                }
+            }
         }
     }
     private void OnGoatCaptured(int captureValue)
@@ -175,6 +197,13 @@ public class GameManager : MonoBehaviour
 
     GameObject CreateGoat(Vector3 pos) {
         GameObject goat = Instantiate(goatPrefab, pos, Quaternion.identity);
+
+        AudioSource goatAudio = goat.GetComponent<AudioSource>();
+        if (goatAudio != null && goatVolume > 0f)
+        {
+            goatAudio.volume = goatVolume;
+        }
+
         int randomizeType = Random.Range(0, 10); // 10% chance for black goat, 90% chance for white goat
         if (randomizeType == 0) 
         { 

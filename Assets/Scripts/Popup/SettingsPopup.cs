@@ -6,28 +6,35 @@ public class SettingsPopup : BasePopup
     [SerializeField] private OptionsPopup optionsPopup;
     [SerializeField] private TextMeshProUGUI quantityLabel;
     [SerializeField] private Slider quantitySlider;
-    [SerializeField] private TextMeshProUGUI volumeLabel;
-    [SerializeField] private Slider volumeSlider;
+    [SerializeField] private TextMeshProUGUI songVolumeLabel;
+    [SerializeField] private Slider songVolumeSlider;
+    [SerializeField] private TextMeshProUGUI goatVolumeLabel;
+    [SerializeField] private Slider goatVolumeSlider;
     public override void Open()
     {
         base.Open();
         quantitySlider.value = PlayerPrefs.GetInt("Quantity", 1);
-        volumeSlider.value = PlayerPrefs.GetInt("Volume", 15);
+        songVolumeSlider.value = PlayerPrefs.GetInt("SongVolume", 50);
+        goatVolumeSlider.value = PlayerPrefs.GetInt("GoatVolume", 50);
         UpdateQuantity(quantitySlider.value);
-        UpdateVolume(volumeSlider.value);
+        UpdateSongVolume(songVolumeSlider.value);
+        UpdateGoatVolume(goatVolumeSlider.value);
     }
 
     void Start()
     {
         UpdateQuantity(quantitySlider.value);
-        UpdateVolume(volumeSlider.value);
+        UpdateSongVolume(songVolumeSlider.value);
+        UpdateGoatVolume(goatVolumeSlider.value);
     }
     public void OnOKButton()
     {
         PlayerPrefs.SetInt("Quantity", (int)quantitySlider.value);
-        PlayerPrefs.SetInt("Volume", (int)volumeSlider.value);
+        PlayerPrefs.SetInt("SongVolume", (int)songVolumeSlider.value);
+        PlayerPrefs.SetInt("GoatVolume", (int)goatVolumeSlider.value);
         Messenger<int>.Broadcast(GameEvent.QUANTITY_CHANGED, (int)quantitySlider.value);
-        Messenger<int>.Broadcast(GameEvent.VOLUME_CHANGED, (int)volumeSlider.value);
+        Messenger<int>.Broadcast(GameEvent.SONG_VOLUME_CHANGED, (int)songVolumeSlider.value);
+        Messenger<int>.Broadcast(GameEvent.GOAT_VOLUME_CHANGED, (int)goatVolumeSlider.value);
         Close();
         optionsPopup.Open();
     }
@@ -44,12 +51,20 @@ public class SettingsPopup : BasePopup
     {
         UpdateQuantity(quantitySlider.value);
     }
-    public void UpdateVolume(float quantity)
+    public void UpdateSongVolume(float quantity)
     {
-        volumeLabel.text = "Volume Level: " + ((int)quantity).ToString();
+        songVolumeLabel.text = "Song Volume: " + ((int)quantity).ToString();
     }
-    public void OnVolumeValueChanged(float quantity)
+    public void OnSongVolumeValueChanged(float quantity)
     {
-        UpdateVolume(volumeSlider.value);
+        UpdateSongVolume(songVolumeSlider.value);
+    }
+    public void UpdateGoatVolume(float quantity)
+    {
+        goatVolumeLabel.text = "Goat Volume: " + ((int)quantity).ToString();
+    }
+    public void OnGoatVolumeValueChanged(float quantity)
+    {
+        UpdateGoatVolume(goatVolumeSlider.value);
     }
 }

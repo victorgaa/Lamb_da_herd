@@ -31,6 +31,6 @@ public class GameOverPopup : BasePopup
         {
             playerLabel.text = "It's a tie!";
         }
-        scoreLabel.text = $"Score: {p1score} - {p2score}";
+        scoreLabel.text = $"Score: {p1score} : {p2score}";
     }
 }

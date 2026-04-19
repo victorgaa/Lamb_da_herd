@@ -13,7 +13,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private UIManager uiManager;
     [SerializeField] private InputType inputType = InputType.KeyboardMouse;
 
-    //public CinemachineFreeLook freeLook;
     public float horizontalSpeed = 200f;
     public float verticalSpeed = 2f;
 
@@ -49,8 +48,6 @@ public class PlayerMovement : MonoBehaviour
             camInputX = Input.GetAxis("Gamepad_CamX");
             camInputY = Input.GetAxis("Gamepad_CamY");
         }
-        //freeLook.m_XAxis.Value += camInputX * horizontalSpeed * Time.deltaTime;
-        //freeLook.m_YAxis.Value -= camInputY * verticalSpeed * Time.deltaTime;
 
         Vector3 movement = new Vector3(horizInput, 0, vertInput);
 
@@ -89,14 +86,12 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    // Set the rotation of the model to match the direction of the movement vector
     private void RotateModelToFaceMovement(Vector3 moveDirection)
     {
         Quaternion newRotation = Quaternion.LookRotation(moveDirection);
         model.transform.rotation = Quaternion.Slerp(model.transform.rotation, newRotation, rotateToFaceMovementSpeed * Time.deltaTime);
     }
 
-    // set the player's Y rotation (yaw) to be aligned with the camera's Y rotation
     private void RotatePlayerToFaceAwayFromCamera()
     {
         Quaternion camRotation = Quaternion.Euler(0, cam.transform.rotation.eulerAngles.y, 0);

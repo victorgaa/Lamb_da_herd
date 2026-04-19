@@ -35,9 +35,25 @@ public class SplitScreen : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha4))
             ShowCam2Full();
     }
-    void MoveUIToVertical()
+    void MoveUIToVertical(int player = 0)
     {
         if (P1Controller == null || P2Controller == null || P1Score == null || P2Score == null) return;
+
+        if (player == 1)
+        {
+            P1Controller.gameObject.SetActive(true);
+            P2Controller.gameObject.SetActive(false);
+        }
+        else if (player == 2)
+        {
+            P1Controller.gameObject.SetActive(false);
+            P2Controller.gameObject.SetActive(true);
+        }
+        else
+        {
+            P1Controller.gameObject.SetActive(true);
+            P2Controller.gameObject.SetActive(true);
+        }
 
         //P1Controller
         P1Controller.anchorMin = new Vector2(0f, 0f);
@@ -93,7 +109,7 @@ public class SplitScreen : MonoBehaviour
             dividerCam.enabled = false;
 
         cam1.rect = new Rect(0f, 0f, 1f, 1f);
-        MoveUIToVertical();
+        MoveUIToVertical(1);
     }
 
     void ShowCam2Full()
@@ -105,7 +121,7 @@ public class SplitScreen : MonoBehaviour
             dividerCam.enabled = false;
 
         cam2.rect = new Rect(0f, 0f, 1f, 1f);
-        MoveUIToVertical();
+        MoveUIToVertical(2);
     }
 
     void ShowHorizontalSplit()
