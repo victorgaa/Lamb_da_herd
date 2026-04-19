@@ -10,12 +10,15 @@ public class SettingsPopup : BasePopup
     [SerializeField] private Slider songVolumeSlider;
     [SerializeField] private TextMeshProUGUI goatVolumeLabel;
     [SerializeField] private Slider goatVolumeSlider;
+    [SerializeField] private Toggle controllerToggle;
+    [SerializeField] private SplitScreen splitScreen;
     public override void Open()
     {
         base.Open();
         quantitySlider.value = PlayerPrefs.GetInt("Quantity", 1);
         songVolumeSlider.value = PlayerPrefs.GetInt("SongVolume", 50);
         goatVolumeSlider.value = PlayerPrefs.GetInt("GoatVolume", 50);
+        controllerToggle.SetIsOnWithoutNotify(PlayerPrefs.GetInt("ControllerVisibility", 1) == 1);
         UpdateQuantity(quantitySlider.value);
         UpdateSongVolume(songVolumeSlider.value);
         UpdateGoatVolume(goatVolumeSlider.value);
@@ -32,12 +35,15 @@ public class SettingsPopup : BasePopup
         PlayerPrefs.SetInt("Quantity", (int)quantitySlider.value);
         PlayerPrefs.SetInt("SongVolume", (int)songVolumeSlider.value);
         PlayerPrefs.SetInt("GoatVolume", (int)goatVolumeSlider.value);
+        PlayerPrefs.SetInt("ControllerVisibility", controllerToggle.isOn ? 1 : 0);
         Messenger<int>.Broadcast(GameEvent.QUANTITY_CHANGED, (int)quantitySlider.value);
         Messenger<int>.Broadcast(GameEvent.SONG_VOLUME_CHANGED, (int)songVolumeSlider.value);
         Messenger<int>.Broadcast(GameEvent.GOAT_VOLUME_CHANGED, (int)goatVolumeSlider.value);
+        splitScreen.ChangeControllersVisibility(controllerToggle.isOn); // it was not working with Messenger
         Close();
         optionsPopup.Open();
     }
+
     public void OnCancelButton()
     {
         Close();
@@ -66,5 +72,9 @@ public class SettingsPopup : BasePopup
     public void OnGoatVolumeValueChanged(float quantity)
     {
         UpdateGoatVolume(goatVolumeSlider.value);
+    }
+    public void OnControllerToggleChanged(bool isOn)
+    {
+        PlayerPrefs.SetInt("ControllerVisibility", isOn ? 1 : 0);
     }
 }
