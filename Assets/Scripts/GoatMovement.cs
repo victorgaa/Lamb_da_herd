@@ -21,7 +21,7 @@ public class SheepMovement : MonoBehaviour
 
     private AudioSource audioSrc;
 
-    public float maxRunSpeed = 10f;
+    public float maxRunSpeed = 15f;
     private Vector3 runDirection;
     private bool hasScored = false;//to avoid multiple points from a single goat
 
@@ -49,6 +49,10 @@ public class SheepMovement : MonoBehaviour
         if (other.CompareTag("Player") || other.CompareTag("Grenade"))
         {
             RunAwayFrom(other.transform.position, runForceAmount);
+        }
+        else if (other.CompareTag("HugeGrenade"))
+        {
+            RunAwayFrom(other.transform.position, 2 * runForceAmount);
         }
         else if (other.CompareTag("GoalNorth"))
         {

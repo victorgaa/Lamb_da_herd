@@ -12,9 +12,13 @@ public class SettingsPopup : BasePopup
     [SerializeField] private Slider goatVolumeSlider;
     [SerializeField] private Toggle controllerToggle;
     [SerializeField] private SplitScreen splitScreen;
-    public override void Open()
+
+    private BasePopup previousPopup;
+    public override void Open(BasePopup caller)
     {
+        previousPopup = caller;
         base.Open();
+        splitScreen.ChangeControllersVisibility(false, false);
         quantitySlider.value = PlayerPrefs.GetInt("Quantity", 1);
         songVolumeSlider.value = PlayerPrefs.GetInt("SongVolume", 50);
         goatVolumeSlider.value = PlayerPrefs.GetInt("GoatVolume", 50);
@@ -41,13 +45,19 @@ public class SettingsPopup : BasePopup
         Messenger<int>.Broadcast(GameEvent.GOAT_VOLUME_CHANGED, (int)goatVolumeSlider.value);
         splitScreen.ChangeControllersVisibility(controllerToggle.isOn); // it was not working with Messenger
         Close();
-        optionsPopup.Open();
+
+        //optionsPopup.Open();
+        if (previousPopup != null)
+            previousPopup.Open();
     }
 
     public void OnCancelButton()
     {
+        splitScreen.ChangeControllersVisibility(controllerToggle.isOn);
         Close();
-        optionsPopup.Open();
+        //optionsPopup.Open();
+        if (previousPopup != null)
+            previousPopup.Open();
     }
     public void UpdateQuantity(float quantity)
     {

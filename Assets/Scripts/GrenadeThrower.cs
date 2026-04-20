@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class GrenadeThrower : MonoBehaviour
 {
     [Header("Grenade Prefab")]
     [SerializeField] private GameObject grenadePrefab;
+    [SerializeField] private GameObject hugeGrenadePrefab;
 
     [Header("Grenade Settings")]
     [SerializeField] private InputType inputType = InputType.KeyboardMouse;
@@ -25,9 +27,12 @@ public class GrenadeThrower : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private AudioClip pullPinSound;
     [SerializeField] private AudioClip throwSound;
+    [SerializeField] private AudioClip hugeGrenadeSound;
 
     [Header("UI Manager")]
     [SerializeField] private UIManager uiManager;
+
+    private bool hasHugeGrenade = false;
     private bool isCharging = false;
     private float chargeTime = 0f;
     private float delayBetweenThrows = 0.5f;
@@ -56,7 +61,10 @@ public class GrenadeThrower : MonoBehaviour
         }
 
     }
-
+    public void AddGrenade()
+    {
+        hasHugeGrenade = true;
+    }
     void StartThrowing()
     {
         GrenadeAudioManager.instance.PlayOneShot(pullPinSound, 0.5f);
@@ -93,6 +101,17 @@ public class GrenadeThrower : MonoBehaviour
         Vector3 spawnPosition = throwPosition.position;
 
         GameObject grenade = Instantiate(grenadePrefab, spawnPosition, model.rotation);
+        //GameObject grenade;
+        //if (hasHugeGrenade)
+        //{
+        //    grenade = Instantiate(hugeGrenadePrefab, spawnPosition, model.rotation);
+        //    GrenadeAudioManager.instance.PlayOneShot(hugeGrenadeSound, 0.5f);
+        //    hasHugeGrenade = false;
+        //}
+        //else
+        //{
+        //    grenade = Instantiate(grenadePrefab, spawnPosition, model.rotation);
+        //}
 
         Rigidbody rb = grenade.GetComponent<Rigidbody>();
 

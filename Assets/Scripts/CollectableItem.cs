@@ -20,6 +20,6 @@ public class CollectableItem : MonoBehaviour
     public enum CollectableType
     {
         Paint,
-        Speed
+        Grenade
     }
 }

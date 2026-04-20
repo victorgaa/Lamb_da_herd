@@ -18,17 +18,17 @@ public class UIManager : MonoBehaviour
     [SerializeField] private OptionsPopup optionsPopup;
     [SerializeField] private SettingsPopup settingsPopup;
     [SerializeField] private GameOverPopup gameOverPopup;
+    [SerializeField] private InitialPopup initialPopup;
     private int popupsActive = 0;
     public bool IsGameActive { get; private set; } = true;
     private void Awake()
     {
         Messenger.AddListener(GameEvent.POPUP_OPENED, OnPopupOpened);
         Messenger.AddListener(GameEvent.POPUP_CLOSED, OnPopupClosed);
-        //Messenger<float>.AddListener(GameEvent.HEALTH_CHANGED, OnHealthChanged);
     }
     void Start()
     {
-        
+        initialPopup.Open();
     }
 
     void Update()

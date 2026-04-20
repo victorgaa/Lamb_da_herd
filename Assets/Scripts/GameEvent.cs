@@ -9,5 +9,6 @@ public static class GameEvent
     public const string SONG_VOLUME_CHANGED = "SONG_VOLUME_CHANGED";
     public const string GOAT_VOLUME_CHANGED = "GOAT_VOLUME_CHANGED";
     public const string GOAT_CAPTURED = "GOAT_CAPTURED";
+    public const string GAME_RESUMED = "GAME_RESUMED";
     public const string PICKUP_ITEM = "PICKUP_ITEM";
 }

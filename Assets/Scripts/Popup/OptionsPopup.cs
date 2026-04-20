@@ -3,11 +3,16 @@ using UnityEngine;
 public class OptionsPopup : BasePopup
 {
     [SerializeField] private SettingsPopup settingsPopup;
-
+    [SerializeField] private SplitScreen splitScreen;
+    public override void Open(BasePopup caller = null)
+    {
+        base.Open();
+        splitScreen.ChangeControllersVisibility(false, false);
+    }
     public void OnSettingsButton()
     {
         Close();
-        settingsPopup.Open();
+        settingsPopup.Open(this);
     }
     public void OnExitGameButton()
     {
@@ -21,6 +26,8 @@ public class OptionsPopup : BasePopup
     }
     public void OnReturnToGameButton()
     {
+        bool controllerVisible = PlayerPrefs.GetInt("ControllerVisibility", 1) == 1;
+        splitScreen.ChangeControllersVisibility(controllerVisible, true);
         Close();
     }
 }

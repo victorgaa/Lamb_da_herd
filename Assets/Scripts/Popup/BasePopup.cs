@@ -1,17 +1,13 @@
 using UnityEngine;
 public class BasePopup : MonoBehaviour
 {
-    public virtual void Open()
+    public virtual void Open(BasePopup caller = null)
     {
-        if (!IsActive())
-        {
-            gameObject.SetActive(true);
-            Messenger.Broadcast(GameEvent.POPUP_OPENED);
-        }
-        else
-        {
-            Debug.LogError(this + ".Open() - already active!");
-        }
+        if (caller != null)
+            Debug.Log($"{name} opened from {caller.name}");
+
+        gameObject.SetActive(true);
+        Messenger.Broadcast(GameEvent.POPUP_OPENED);
     }
 
     public virtual void Close()

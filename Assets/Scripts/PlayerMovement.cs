@@ -21,8 +21,8 @@ public class PlayerMovement : MonoBehaviour
     private float speed = 9.0f;         // XZ movement speed
     private float verticalVelocity = 0f;
     private float gravity = -9.81f;
-
-        void Update()
+    
+    void Update()
     {
         if (!uiManager.IsGameActive) 
         { 

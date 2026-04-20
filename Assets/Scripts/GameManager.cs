@@ -5,7 +5,7 @@ using UnityEngine.SocialPlatforms.Impl;
 
 public class GameManager : MonoBehaviour
 {
-    private const int goatCount = 27;
+    private const int goatCount = 37;
     GameObject[] goats = new GameObject[goatCount];
 
     private int scoreP1 = 0;
@@ -20,14 +20,18 @@ public class GameManager : MonoBehaviour
     private float pickupSpawnInterval = 30f;
     private GameObject currentPickup;
 
-    private float goatVolume; 
+    private float goatVolume;
+
+    //[Header("Players")]
+    //[SerializeField] private GrenadeThrower player1;
+    //[SerializeField] private GrenadeThrower player2;
 
     [Header("Prefabs")]
     [SerializeField] private GameObject goatPrefab;
     [SerializeField] private GameObject paintPickupPrefab;
 
     [Header("Game Configuration")]
-    [SerializeField] private float matchDuration = 120f; // 2 minutes in seconds
+    [SerializeField] private float matchDuration = 121f; // 2 minutes in seconds
 
     [Header("Game Manager")]
     [SerializeField] private UIManager UIManager;
@@ -48,6 +52,8 @@ public class GameManager : MonoBehaviour
         Messenger<int>.AddListener(GameEvent.SONG_VOLUME_CHANGED, OnSongVolumeChanged);
         Messenger<int>.AddListener(GameEvent.GOAT_VOLUME_CHANGED, OnGoatVolumeChanged);
         Messenger<string>.AddListener(GameEvent.PICKUP_ITEM, OnPickupItem);
+        //Messenger<(string, int)>.AddListener(GameEvent.PICKUP_ITEM, OnPickupItem);
+        Messenger.AddListener(GameEvent.GAME_RESUMED, OnGameResumed);
 
         Messenger.AddListener(GameEvent.RESTART_GAME, OnRestartGame);
     }
@@ -58,6 +64,8 @@ public class GameManager : MonoBehaviour
         Messenger<int>.RemoveListener(GameEvent.SONG_VOLUME_CHANGED, OnSongVolumeChanged);
         Messenger<int>.RemoveListener(GameEvent.GOAT_VOLUME_CHANGED, OnGoatVolumeChanged);
         Messenger<string>.RemoveListener(GameEvent.PICKUP_ITEM, OnPickupItem);
+        //Messenger<(string, int)>.RemoveListener(GameEvent.PICKUP_ITEM, OnPickupItem);
+        Messenger.RemoveListener(GameEvent.GAME_RESUMED, OnGameResumed);
 
         Messenger.RemoveListener(GameEvent.RESTART_GAME, OnRestartGame);
     }
@@ -67,12 +75,7 @@ public class GameManager : MonoBehaviour
         remainingTime = matchDuration;
 
         StartCoroutine(MatchTimer());
-        StartCoroutine(PickupSpawner());
-
-        if (whistle != null)
-        {
-            audioSource.PlayOneShot(whistle);
-        }
+        StartCoroutine(PickupSpawner()); 
     }
     void Update()
     {
@@ -85,10 +88,16 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    private void OnGameResumed()
+    {
+        if (whistle != null)
+        {
+            audioSource.PlayOneShot(whistle);
+        }
+    }
     private void OnPickupItem(string pickupType)
     {
         currentPickup = null;
-
         if (pickupType == "Paint")
         {
             audioSource.PlayOneShot(bucketPickup);
@@ -105,6 +114,39 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    //private void OnPickupItem((string, int) data)
+    //{
+    //    string pickupType = data.Item1;
+    //    int playerId = data.Item2;
+    //    currentPickup = null;
+
+    //    if (pickupType == "Paint")
+    //    {
+    //        audioSource.PlayOneShot(bucketPickup);
+    //        for (int i = 0; i < goats.Length; i++)
+    //        {
+    //            if (goats[i] != null)
+    //            {
+    //                SheepMovement goatScript = goats[i].GetComponent<SheepMovement>();
+    //                if (goatScript != null)
+    //                {
+    //                    goatScript.ReverseGoatType();
+    //                }
+    //            }
+    //        }
+    //    }
+    //    if (pickupType == "Grenade")
+    //    {
+    //        if (playerId == 1)
+    //        {
+    //            player1.AddGrenade();
+    //        }
+    //        else if (playerId == 2)
+    //        {
+    //            player2.AddGrenade();
+    //        }
+    //    }
+    //}
     private void OnQuantityChanged(int newQuantity)
     {
         for (int i = 0; i < goats.Length; i++)

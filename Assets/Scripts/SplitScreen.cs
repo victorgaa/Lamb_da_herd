@@ -15,15 +15,22 @@ public class SplitScreen : MonoBehaviour
     [SerializeField] private RectTransform P1Score;
     [SerializeField] private RectTransform P2Controller;
     [SerializeField] private RectTransform P2Score;
+    [SerializeField] private RectTransform gameTimer;
 
-    private CanvasGroup p1CanvasGroup;
-    private CanvasGroup p2CanvasGroup;
+    private CanvasGroup p1ControllerCanvasGroup;
+    private CanvasGroup p1ScoreCanvasGroup;
+    private CanvasGroup p2ControllerCanvasGroup;
+    private CanvasGroup p2ScoreCanvasGroup;
+    private CanvasGroup gameTimerCanvasGroup;
     private bool isControllersVisible = true;
 
     private void Start()
     {
-        p1CanvasGroup = P1Controller.GetComponent<CanvasGroup>();
-        p2CanvasGroup = P2Controller.GetComponent<CanvasGroup>();
+        p1ControllerCanvasGroup = P1Controller.GetComponent<CanvasGroup>();
+        p1ScoreCanvasGroup = P1Score.GetComponent<CanvasGroup>();
+        p2ControllerCanvasGroup = P2Controller.GetComponent<CanvasGroup>();
+        p2ScoreCanvasGroup = P2Score.GetComponent<CanvasGroup>();
+        gameTimerCanvasGroup = gameTimer.GetComponent<CanvasGroup>();
 
         isControllersVisible = PlayerPrefs.GetInt("ControllerVisibility", 1) == 1;
 
@@ -49,26 +56,44 @@ public class SplitScreen : MonoBehaviour
     // =========================
     // CONTROLLER VISIBILITY
     // =========================
-    public void ChangeControllersVisibility(bool isVisible)
+    public void ChangeControllersVisibility(bool isControllerVisible, bool isUIVisible = true)
     {
-        isControllersVisible = isVisible;
-        ApplyControllerVisibility(isVisible);
+        isControllersVisible = isControllerVisible;
+        ApplyControllerVisibility(isControllerVisible, isUIVisible);
     }
 
-    private void ApplyControllerVisibility(bool isVisible)
+    private void ApplyControllerVisibility(bool isControllerVisible, bool isUIVisible = true)
     {
-        if (p1CanvasGroup != null)
+        if (p1ControllerCanvasGroup != null)
         {
-            p1CanvasGroup.alpha = isVisible ? 1 : 0;
-            p1CanvasGroup.interactable = isVisible;
-            p1CanvasGroup.blocksRaycasts = isVisible;
+            p1ControllerCanvasGroup.alpha = isControllerVisible ? 1 : 0;
+            p1ControllerCanvasGroup.interactable = isControllerVisible;
+            p1ControllerCanvasGroup.blocksRaycasts = isControllerVisible;
         }
 
-        if (p2CanvasGroup != null)
+        if (p2ControllerCanvasGroup != null)
         {
-            p2CanvasGroup.alpha = isVisible ? 1 : 0;
-            p2CanvasGroup.interactable = isVisible;
-            p2CanvasGroup.blocksRaycasts = isVisible;
+            p2ControllerCanvasGroup.alpha = isControllerVisible ? 1 : 0;
+            p2ControllerCanvasGroup.interactable = isControllerVisible;
+            p2ControllerCanvasGroup.blocksRaycasts = isControllerVisible;
+        }
+        if (p1ScoreCanvasGroup != null)
+        {
+            p1ScoreCanvasGroup.alpha = isUIVisible ? 1 : 0;
+            p1ScoreCanvasGroup.interactable = isUIVisible;
+            p1ScoreCanvasGroup.blocksRaycasts = isUIVisible;
+        }
+        if (p2ScoreCanvasGroup != null)
+        {
+            p2ScoreCanvasGroup.alpha = isUIVisible ? 1 : 0;
+            p2ScoreCanvasGroup.interactable = isUIVisible;
+            p2ScoreCanvasGroup.blocksRaycasts = isUIVisible;
+        }
+        if (gameTimerCanvasGroup != null)
+        {
+            gameTimerCanvasGroup.alpha = isUIVisible ? 1 : 0;
+            gameTimerCanvasGroup.interactable = isUIVisible;
+            gameTimerCanvasGroup.blocksRaycasts = isUIVisible;
         }
     }
 
@@ -146,15 +171,15 @@ public class SplitScreen : MonoBehaviour
     // For controls layout visibility
     private void SetControllerLayout(bool p1, bool p2)
     {
-        if (p1CanvasGroup == null || p2CanvasGroup == null) return;
+        if (p1ControllerCanvasGroup == null || p2ControllerCanvasGroup == null) return;
 
-        p1CanvasGroup.alpha = p1 && isControllersVisible ? 1 : 0;
-        p1CanvasGroup.interactable = p1 && isControllersVisible;
-        p1CanvasGroup.blocksRaycasts = p1 && isControllersVisible;
+        p1ControllerCanvasGroup.alpha = p1 && isControllersVisible ? 1 : 0;
+        p1ControllerCanvasGroup.interactable = p1 && isControllersVisible;
+        p1ControllerCanvasGroup.blocksRaycasts = p1 && isControllersVisible;
 
-        p2CanvasGroup.alpha = p2 && isControllersVisible ? 1 : 0;
-        p2CanvasGroup.interactable = p2 && isControllersVisible;
-        p2CanvasGroup.blocksRaycasts = p2 && isControllersVisible;
+        p2ControllerCanvasGroup.alpha = p2 && isControllersVisible ? 1 : 0;
+        p2ControllerCanvasGroup.interactable = p2 && isControllersVisible;
+        p2ControllerCanvasGroup.blocksRaycasts = p2 && isControllersVisible;
     }
 
     // =========================
