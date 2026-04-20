@@ -488,8 +488,8 @@ MonoBehaviour:
   explosionParticleOffset: {x: 0, y: 1, z: 0}
   audioSourcePrefab: {fileID: 538503049481493739, guid: 0d311d84d3635b243b0d32fbfc78633d, type: 3}
   explosionDelay: 3
-  explosionRadius: 40
-  explosionSound: {fileID: 8300000, guid: 74e8b2d96ae9d7545a1a8bcfdf6c28dd, type: 3}
+  explosionRadius: 50
+  explosionSound: {fileID: 8300000, guid: a880c49e8338b874bb240e6e8f634ce1, type: 3}
   impactSound: {fileID: 8300000, guid: a44786edd321a4244b37283aa32b3e4d, type: 3}
 --- !u!135 &2055909817992035476
 SphereCollider:
