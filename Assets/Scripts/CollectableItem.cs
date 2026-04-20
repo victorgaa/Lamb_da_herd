@@ -12,8 +12,17 @@ public class CollectableItem : MonoBehaviour
     {
         if(other.CompareTag("Player"))
         {
-            Messenger<string>.Broadcast(GameEvent.PICKUP_ITEM, value.ToString());
-            Destroy(this.gameObject);
+            PlayerIdentity player = other.GetComponent<PlayerIdentity>();
+
+            if (player != null)
+            {
+                Messenger<(string, int)>.Broadcast(
+                    GameEvent.PICKUP_ITEM,
+                    (value.ToString(), player.playerId)
+                );
+            }
+
+            Destroy(gameObject);
         }
     }
 

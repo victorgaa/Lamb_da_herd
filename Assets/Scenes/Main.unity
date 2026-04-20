@@ -2417,6 +2417,7 @@ MonoBehaviour:
   player2: {fileID: 1930977989}
   goatPrefab: {fileID: 3510213296537911726, guid: 1d4b7b1bcb53ed0468fcdc89fe6d652c, type: 3}
   paintPickupPrefab: {fileID: 8497976080342767934, guid: 63947d878c4a2854aaad1aeed498946c, type: 3}
+  grenadePickupPrefab: {fileID: 8497976080342767934, guid: 4b6fa5832a16d2243ab283bbd1c7c8b9, type: 3}
   matchDuration: 121
   UIManager: {fileID: 1901828343}
   whistle: {fileID: 8300000, guid: ec88d6968e9bab44ea9db7028449771e, type: 3}

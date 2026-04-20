@@ -17,18 +17,19 @@ public class GameManager : MonoBehaviour
     private bool isTimerPaused = false;
 
     private float pickupSpawnDelay = 5f;
-    private float pickupSpawnInterval = 30f;
+    private float pickupSpawnInterval = 10f;
     private GameObject currentPickup;
 
     private float goatVolume;
 
-    //[Header("Players")]
-    //[SerializeField] private GrenadeThrower player1;
-    //[SerializeField] private GrenadeThrower player2;
+    [Header("Players")]
+    [SerializeField] private GrenadeThrower player1;
+    [SerializeField] private GrenadeThrower player2;
 
     [Header("Prefabs")]
     [SerializeField] private GameObject goatPrefab;
     [SerializeField] private GameObject paintPickupPrefab;
+    [SerializeField] private GameObject grenadePickupPrefab;
 
     [Header("Game Configuration")]
     [SerializeField] private float matchDuration = 121f; // 2 minutes in seconds
@@ -51,8 +52,7 @@ public class GameManager : MonoBehaviour
         Messenger<int>.AddListener(GameEvent.QUANTITY_CHANGED, OnQuantityChanged);
         Messenger<int>.AddListener(GameEvent.SONG_VOLUME_CHANGED, OnSongVolumeChanged);
         Messenger<int>.AddListener(GameEvent.GOAT_VOLUME_CHANGED, OnGoatVolumeChanged);
-        Messenger<string>.AddListener(GameEvent.PICKUP_ITEM, OnPickupItem);
-        //Messenger<(string, int)>.AddListener(GameEvent.PICKUP_ITEM, OnPickupItem);
+        Messenger<(string, int)>.AddListener(GameEvent.PICKUP_ITEM, OnPickupItem);
         Messenger.AddListener(GameEvent.GAME_RESUMED, OnGameResumed);
 
         Messenger.AddListener(GameEvent.RESTART_GAME, OnRestartGame);
@@ -63,8 +63,7 @@ public class GameManager : MonoBehaviour
         Messenger<int>.RemoveListener(GameEvent.QUANTITY_CHANGED, OnQuantityChanged);
         Messenger<int>.RemoveListener(GameEvent.SONG_VOLUME_CHANGED, OnSongVolumeChanged);
         Messenger<int>.RemoveListener(GameEvent.GOAT_VOLUME_CHANGED, OnGoatVolumeChanged);
-        Messenger<string>.RemoveListener(GameEvent.PICKUP_ITEM, OnPickupItem);
-        //Messenger<(string, int)>.RemoveListener(GameEvent.PICKUP_ITEM, OnPickupItem);
+        Messenger<(string, int)>.RemoveListener(GameEvent.PICKUP_ITEM, OnPickupItem);
         Messenger.RemoveListener(GameEvent.GAME_RESUMED, OnGameResumed);
 
         Messenger.RemoveListener(GameEvent.RESTART_GAME, OnRestartGame);
@@ -95,9 +94,13 @@ public class GameManager : MonoBehaviour
             audioSource.PlayOneShot(whistle);
         }
     }
-    private void OnPickupItem(string pickupType)
+
+    private void OnPickupItem((string, int) data)
     {
+        string pickupType = data.Item1;
+        int playerId = data.Item2;
         currentPickup = null;
+
         if (pickupType == "Paint")
         {
             audioSource.PlayOneShot(bucketPickup);
@@ -113,40 +116,18 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+        if (pickupType == "Grenade")
+        {
+            if (playerId == 1)
+            {
+                player1.AddGrenade();
+            }
+            else if (playerId == 2)
+            {
+                player2.AddGrenade();
+            }
+        }
     }
-    //private void OnPickupItem((string, int) data)
-    //{
-    //    string pickupType = data.Item1;
-    //    int playerId = data.Item2;
-    //    currentPickup = null;
-
-    //    if (pickupType == "Paint")
-    //    {
-    //        audioSource.PlayOneShot(bucketPickup);
-    //        for (int i = 0; i < goats.Length; i++)
-    //        {
-    //            if (goats[i] != null)
-    //            {
-    //                SheepMovement goatScript = goats[i].GetComponent<SheepMovement>();
-    //                if (goatScript != null)
-    //                {
-    //                    goatScript.ReverseGoatType();
-    //                }
-    //            }
-    //        }
-    //    }
-    //    if (pickupType == "Grenade")
-    //    {
-    //        if (playerId == 1)
-    //        {
-    //            player1.AddGrenade();
-    //        }
-    //        else if (playerId == 2)
-    //        {
-    //            player2.AddGrenade();
-    //        }
-    //    }
-    //}
     private void OnQuantityChanged(int newQuantity)
     {
         for (int i = 0; i < goats.Length; i++)
@@ -281,7 +262,14 @@ public class GameManager : MonoBehaviour
         if (currentPickup != null) return;
 
         Vector3 spawnPos = GetRandomSpawnPosition();
-        currentPickup = Instantiate(paintPickupPrefab, spawnPos, Quaternion.identity);
+        if (Random.Range(0, 2) == 0)
+        {
+            currentPickup = Instantiate(paintPickupPrefab, spawnPos, Quaternion.identity);
+        }
+        else
+        { 
+            currentPickup = Instantiate(grenadePickupPrefab, spawnPos, Quaternion.identity);
+        }
     }
     private void GameOver()
     {

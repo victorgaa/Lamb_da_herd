@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 561878579396299129}
   - component: {fileID: 8705326219682767238}
   m_Layer: 0
-  m_Name: Bucket
+  m_Name: BucketPickup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

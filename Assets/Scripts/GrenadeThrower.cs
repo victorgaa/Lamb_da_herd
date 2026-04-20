@@ -100,18 +100,18 @@ public class GrenadeThrower : MonoBehaviour
     {
         Vector3 spawnPosition = throwPosition.position;
 
-        GameObject grenade = Instantiate(grenadePrefab, spawnPosition, model.rotation);
-        //GameObject grenade;
-        //if (hasHugeGrenade)
-        //{
-        //    grenade = Instantiate(hugeGrenadePrefab, spawnPosition, model.rotation);
-        //    GrenadeAudioManager.instance.PlayOneShot(hugeGrenadeSound, 0.5f);
-        //    hasHugeGrenade = false;
-        //}
-        //else
-        //{
-        //    grenade = Instantiate(grenadePrefab, spawnPosition, model.rotation);
-        //}
+        //GameObject grenade = Instantiate(grenadePrefab, spawnPosition, model.rotation);
+        GameObject grenade;
+        if (hasHugeGrenade)
+        {
+            grenade = Instantiate(hugeGrenadePrefab, spawnPosition, model.rotation);
+            GrenadeAudioManager.instance.PlayOneShot(hugeGrenadeSound, 0.5f);
+            hasHugeGrenade = false;
+        }
+        else
+        {
+            grenade = Instantiate(grenadePrefab, spawnPosition, model.rotation);
+        }
 
         Rigidbody rb = grenade.GetComponent<Rigidbody>();
 
