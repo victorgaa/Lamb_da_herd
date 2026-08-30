@@ -29,14 +29,14 @@ Unity
 C#
 
 Screenshots
+
+<img width="1907" height="1066" alt="image" src="https://github.com/user-attachments/assets/fb65c5af-3ef8-45e0-9d60-68c935e4bab4" />
+
 <img width="1919" height="1070" alt="image" src="https://github.com/user-attachments/assets/fd78a498-755f-452a-bdb8-6adb3ffdba37" />
 
 <img width="721" height="586" alt="image" src="https://github.com/user-attachments/assets/54cf239d-9cb0-4cca-a07e-c4d2b7606d18" />
 
 <img width="925" height="711" alt="image" src="https://github.com/user-attachments/assets/e27a36f3-d3ef-4f39-998a-d267dfc32719" />
-
-Controls
-<img width="1907" height="1066" alt="image" src="https://github.com/user-attachments/assets/fb65c5af-3ef8-45e0-9d60-68c935e4bab4" />
 
 How to Play
 From the Unity Project
